@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
+using Bnet;
 
 namespace M16Chat_Windows
 {
@@ -9,6 +10,10 @@ namespace M16Chat_Windows
     /// </summary>
     public partial class MainWindow
     {
+        private static String bServerIP = "m16-chat.ggu.la";
+        private static String bServerPort = "6112";
+        private BnetClient bClient = new BnetClient(bServerIP, bServerPort);
+
         private async void ShowLoginDialog(object sender, RoutedEventArgs e)
         {
             LoginDialogData result = await this.ShowLoginAsync("로그인", "M16 계정의 아이디와 비밀번호를 입력해주세요.", new LoginDialogSettings { ColorScheme = this.MetroDialogOptions.ColorScheme, AnimateShow = true });

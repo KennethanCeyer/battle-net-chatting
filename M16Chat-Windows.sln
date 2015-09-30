@@ -5,7 +5,12 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M16Chat-Windows", "M16Chat-Windows\M16Chat-Windows.csproj", "{896E7C8B-0D9F-4E61-95A9-29924BEBEA16}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Bnet", "BnetClient\Bnet.xproj", "{6BF2B437-99B2-40B3-BCB8-C2217F1E4D18}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C1BA309C-4AA5-4B65-BE05-BE3683A98465}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bnet", "Bnet\Bnet.csproj", "{E587407A-376E-454E-9A99-ECF10AD34A4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +22,10 @@ Global
 		{896E7C8B-0D9F-4E61-95A9-29924BEBEA16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{896E7C8B-0D9F-4E61-95A9-29924BEBEA16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{896E7C8B-0D9F-4E61-95A9-29924BEBEA16}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6BF2B437-99B2-40B3-BCB8-C2217F1E4D18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BF2B437-99B2-40B3-BCB8-C2217F1E4D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BF2B437-99B2-40B3-BCB8-C2217F1E4D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BF2B437-99B2-40B3-BCB8-C2217F1E4D18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E587407A-376E-454E-9A99-ECF10AD34A4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E587407A-376E-454E-9A99-ECF10AD34A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E587407A-376E-454E-9A99-ECF10AD34A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E587407A-376E-454E-9A99-ECF10AD34A4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

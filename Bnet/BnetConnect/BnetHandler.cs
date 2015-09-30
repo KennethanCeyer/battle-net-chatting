@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Bnet.BnetConnect
 {
     public class BnetHandler
     {
         protected bool debugMode = false;
+        private const String prefix = "BnetClient";
 
         public enum BnetCode
         {
@@ -32,7 +34,7 @@ namespace Bnet.BnetConnect
         {
             if(this.debugMode == true)
             {
-                Console.WriteLine(this.BnetMsg[(int) code]);
+                Debug.WriteLine(prefix + " : " + this.BnetMsg[(int) code]);
             }
             return (int) code;
         }

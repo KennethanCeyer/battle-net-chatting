@@ -16,20 +16,26 @@ namespace Bnet
     {
         private static Dictionary<String, String> bnetConInfo;
         private Socket bnetSock;
+        private BnetProtocol bnetProtocol = new BnetProtocol();
+        private List<Byte> sockBuffer = new List<Byte>();
         public BnetClient(String bnetConIP, String bnetConPort)
         {
+            this.debugMode = true;
             bnetConInfo = new Dictionary<String, String>();
             bnetConInfo.Add("ip", bnetConIP);
             bnetConInfo.Add("port", bnetConPort);
+        }
 
+        public void Connect()
+        {
             IPAddress bnetServerIP = Dns.GetHostAddresses(bnetConInfo["ip"])[0];
             IPEndPoint bnetServerEP = new IPEndPoint(bnetServerIP, Int32.Parse(bnetConInfo["port"]));
-            Socket bClient = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            this.bnetSock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
             try
             {
-                bClient.ReceiveBufferSize = Int32.MaxValue;
-                bClient.ReceiveTimeout = 3000;
+                this.bnetSock.ReceiveBufferSize = Int32.MaxValue;
+                this.bnetSock.ReceiveTimeout = 3000;
                 this.getHandleMsg(BnetCode.ConnectionWithServer);
             }
             catch (Exception e)
@@ -37,14 +43,13 @@ namespace Bnet
                 this.getHandleMsg(BnetCode.ConnectionSuccess);
             }
 
-            bClient.Connect(bnetServerEP);
+            this.bnetSock.Connect(bnetServerEP);
+            this.bnetSock.Send(BitConverter.GetBytes(0x01));
+            this.getHandleMsg(BnetCode.ConnectionSuccess);
 
-        }
-
-        public Socket Connect()
-        {
-
-            return this.bnetSock;
+            bnetProtocol.setBnetByte("49583836"); // Platform IX86
+            bnetProtocol.setBnetByte("44534852"); // Warcraft III
+            bnetProtocol.setBnetByte("00000000"); // Version  0.0
         }
     }
 }

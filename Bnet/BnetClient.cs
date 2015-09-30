@@ -21,6 +21,7 @@ namespace Bnet
         public BnetClient(String bnetConIP, String bnetConPort)
         {
             this.debugMode = true;
+            bnetProtocol.clientToken = Math.Abs(new Random().Next());
             bnetConInfo = new Dictionary<String, String>();
             bnetConInfo.Add("ip", bnetConIP);
             bnetConInfo.Add("port", bnetConPort);
@@ -47,9 +48,14 @@ namespace Bnet
             this.bnetSock.Send(BitConverter.GetBytes(0x01));
             this.getHandleMsg(BnetCode.ConnectionSuccess);
 
+            int bnetClientTimeOffset = Convert.ToInt32(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMilliseconds / -60000);
+
             bnetProtocol.setBnetByte("49583836"); // Platform IX86
             bnetProtocol.setBnetByte("44534852"); // Warcraft III
             bnetProtocol.setBnetByte("00000000"); // Version  0.0
+            bnetProtocol.setBnetString("koKR");   // Language
+            bnetProtocol.setBnetByte(0);
+            bnetProtocol.setBnetByte(bnetClientTimeOffset);
         }
     }
 }

@@ -10,12 +10,8 @@
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
         Height="600"
-        Width="800" Loaded="Initializing">
+        Width="400" Loaded="Initializing">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="167*"/>
-            <ColumnDefinition Width="31*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
@@ -27,7 +23,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBox>aa</TextBox>
+                    <TextBox x:Name="MainChatBox">aa</TextBox>
                 </Grid>
             </TabItem>
             <TabItem Header="친구">
@@ -36,6 +32,6 @@
                 </Grid>
             </TabItem>
         </TabControl>
-
+        <Controls:ProgressRing x:Name="MainSpinner" IsActive="False" />
     </Grid>
 </Controls:MetroWindow>

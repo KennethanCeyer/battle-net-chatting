@@ -17,7 +17,6 @@ using MahApps.Metro.Controls.Dialogs;
 
 namespace M16Chat_Windows
 {
-
     /// <summary>
     /// MainWindow.xaml에 대한 상호 작용 논리
     /// </summary>
@@ -25,13 +24,14 @@ namespace M16Chat_Windows
     {
         private async void ShowLoginDialog(object sender, RoutedEventArgs e)
         {
-            LoginDialogData result = await this.ShowLoginAsync("로그인을 해주세요", "M16 계정의 아이디와 비밀번호를 입력해주세요", new LoginDialogSettings { ColorScheme = this.MetroDialogOptions.ColorScheme, AnimateShow = true });
+            LoginDialogData result = await this.ShowLoginAsync("로그인", "M16 계정의 아이디와 비밀번호를 입력해주세요.", new LoginDialogSettings { ColorScheme = this.MetroDialogOptions.ColorScheme, AnimateShow = true });
             if (result == null || (result.Username == null || result.Password == null))
             {
                 this.ShowLoginDialog(sender, e);
             }
             else
             {
+                MainSpinner.IsActive = true;
                 MessageDialogResult messageResult = await this.ShowMessageAsync("Authentication Information", String.Format("Username: {0}\nPassword: {1}", result.Username, result.Password));
             }
         }

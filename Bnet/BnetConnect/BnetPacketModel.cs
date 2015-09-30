@@ -211,7 +211,7 @@ namespace Bnet.BnetConnect
         D2GS_TRADE = 0x4F,
         D2GS_DROPGOLD = 0x50,
         D2GS_WORLDOBJECT = 0x51,
-        D2GS_(COMP)STARTGAME = 0x5C,
+        D2GS_COMP_STARTGAME = 0x5C,
         D2GS_PARTY = 0x5E,
         D2GS_POTIONTOMERCENARY = 0x61,
         D2GS_GAMELOGON = 0x68,

@@ -22,7 +22,3 @@ C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\M16Cha
 C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\M16Chat-Windows.csproj.GenerateResource.Cache
 C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\M16Chat-Windows.exe
 C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\M16Chat-Windows.pdb
-C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\bin\Debug\battlenet-api.dll
-C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\bin\Debug\Newtonsoft.Json.dll
-C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\bin\Debug\battlenet-api.pdb
-C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\bin\Debug\Newtonsoft.Json.xml

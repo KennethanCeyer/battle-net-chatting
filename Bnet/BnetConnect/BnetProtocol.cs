@@ -44,6 +44,15 @@ namespace Bnet.BnetConnect
             }
         }
 
+        public void setBnetByte(UInt32 intData, bool isVariable = false)
+        {
+            byte[] bData = BitConverter.GetBytes(intData);
+            foreach (byte data in bData)
+            {
+                bnetData.Add(data);
+            }
+        }
+
         public void setBnetByte(String strData, bool isVariable = false)
         {
             String hexData = bnetHelper.Acsii2Hex(strData);
@@ -101,9 +110,20 @@ namespace Bnet.BnetConnect
             return bnetPacketSt;
         }
 
-        public int[] encriptDobuleHash(String str)
+        public uint[] encriptDobuleHash(String str)
         {
-            return 0;
+            byte[] data = Encoding.UTF8.GetBytes(str);
+            uint[] hash = BnetHelper.blockHash(data);
+
+            List<byte> buff = new List<byte>();
+            buff.AddRange(BitConverter.GetBytes(this.clientToken));
+            buff.AddRange(BitConverter.GetBytes(this.serverToken));
+
+            for(int i=0; i<5; i++)
+            {
+                buff.AddRange(BitConverter.GetBytes(hash[i]));
+            }
+            return BnetHelper.blockHash(buff.ToArray());
         }
 
         public List<byte> getBnetPacket()

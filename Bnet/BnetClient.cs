@@ -137,7 +137,17 @@ namespace Bnet
                                         }
                                     } else
                                     {
+                                        uint[] bnetPwHash = bnetProtocol.encriptDobuleHash(bnetUserPw);
 
+                                        bnetProtocol.setBnetByte(bnetProtocol.clientToken);
+                                        bnetProtocol.setBnetByte(bnetProtocol.serverToken);
+                                        bnetProtocol.setBnetByte(bnetPwHash[0]);
+                                        bnetProtocol.setBnetByte(bnetPwHash[1]);
+                                        bnetProtocol.setBnetByte(bnetPwHash[2]);
+                                        bnetProtocol.setBnetByte(bnetPwHash[3]);
+                                        bnetProtocol.setBnetByte(bnetPwHash[4]);
+                                        bnetProtocol.setBnetByte(bnetUsrId, true);
+                                        bnetProtocol.send(bnetSock, BnetPacketModel.SID_LOGONRESPONSE2);
                                     }
                                     break;
                             }

@@ -40,5 +40,14 @@ namespace Bnet.BnetConnect
             }
             return (int) code;
         }
+
+        public String getHandleMsg(String msg)
+        {
+            if (this.debugMode == true)
+            {
+                Debug.WriteLine(prefix + " : " + msg);
+            }
+            return msg;
+        }
     }
 }

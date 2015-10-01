@@ -32,6 +32,7 @@ namespace Bnet
             IPAddress bnetServerIP = Dns.GetHostAddresses(bnetConInfo["ip"])[0];
             IPEndPoint bnetServerEP = new IPEndPoint(bnetServerIP, Int32.Parse(bnetConInfo["port"]));
             this.bnetSock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            byte[] receiveBuffer = new byte[255];
 
             try
             {
@@ -54,14 +55,29 @@ namespace Bnet
             bnetProtocol.setBnetByte(0x44534852); // Warcraft III
             bnetProtocol.setBnetByte(0x00000000); // Version  0.0
             bnetProtocol.setBnetByte("koKR");     // Language
-            bnetProtocol.setBnetByte(0);
+            bnetProtocol.setBnetByte(0x00000000);
             bnetProtocol.setBnetByte(bnetClientTimeOffset);
             bnetProtocol.setBnetByte(0x412);
             bnetProtocol.setBnetByte(0x412);
             bnetProtocol.setBnetByte("KOR", true);
             bnetProtocol.setBnetByte("Korea", true);
-            bnetProtocol.send(this.bnetSock);
+            bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_AUTH_INFO);
             this.getHandleMsg(BnetCode.AuthInfoSuccess);
+
+            try {
+                while (true)
+                {
+                    bnetSock.Receive(receiveBuffer);
+                    if (receiveBuffer != null)
+                    {
+                        break;
+                    }
+                }
+            }
+            catch (SocketException e)
+            {
+                this.getHandleMsg(e.StackTrace);
+            }
         }
     }
 }

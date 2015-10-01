@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace Bnet.BnetConnect
 {
@@ -10,6 +12,7 @@ namespace Bnet.BnetConnect
     {
         private List<byte> bnetData = new List<byte>();
         private BnetHelper bnetHelper = BnetHelper.getInstance();
+        public byte bnetCommand;
         public int serverToken = 0;
         public int clientToken = 0;
 
@@ -51,10 +54,32 @@ namespace Bnet.BnetConnect
             }
         }
 
-        public void send(System.Net.Sockets.Socket bnetSock)
+        public void send(Socket bnetSock, BnetPacketModel bnetCommand = 0x00)
         {
-            bnetSock.Send(bnetData.ToArray());
+            if(bnetData[0] != 0xFF)
+            {
+                bnetData = this.capsulize(bnetData, bnetCommand);
+            }
+
+            try {
+                bnetSock.Send(bnetData.ToArray());
+            }
+            catch (SocketException e)
+            {
+                throw e;  // any serious error occurr
+            }
             bnetData = null;
+        }
+
+        public List<Byte> capsulize(List<byte> data, BnetPacketModel bnetCommand)
+        {
+            List<Byte> capsule = new List<Byte>();
+            capsule.Add(0xFF);
+            capsule.Add((byte)bnetCommand);
+            capsule.Add((byte)((data.Count + 4) & 0x00FF));
+            capsule.Add((byte)(((data.Count + 4) & 0xFF00) >> 8));
+            capsule.AddRange(data);
+            return capsule;
         }
 
         public List<byte> getBnetPacket()

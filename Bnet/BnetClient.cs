@@ -31,7 +31,7 @@ namespace Bnet
         {
             IPAddress bnetServerIP = Dns.GetHostAddresses(bnetConInfo["ip"])[0];
             IPEndPoint bnetServerEP = new IPEndPoint(bnetServerIP, Int32.Parse(bnetConInfo["port"]));
-            this.bnetSock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            this.bnetSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             byte[] receiveBuffer = new byte[255];
 
             try
@@ -49,8 +49,9 @@ namespace Bnet
             this.bnetSock.Send(BitConverter.GetBytes(0x01));
             this.getHandleMsg(BnetCode.ConnectionSuccess);
 
-            UInt32 bnetClientTimeOffset = Convert.ToUInt32(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMilliseconds / 60000);
+            Int32 bnetClientTimeOffset = Convert.ToInt32(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMilliseconds / -60000);
 
+            bnetProtocol.setBnetByte(0x00000000);
             bnetProtocol.setBnetByte(0x49583836); // Platform IX86
             bnetProtocol.setBnetByte(0x44534852); // Warcraft III
             bnetProtocol.setBnetByte(0x00000000); // Version  0.0
@@ -62,14 +63,13 @@ namespace Bnet
             bnetProtocol.setBnetByte("KOR", true);
             bnetProtocol.setBnetByte("Korea", true);
             bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_AUTH_INFO);
-            this.getHandleMsg(BnetCode.AuthInfoSuccess);
 
             try {
                 while (true)
                 {
-                    bnetSock.Receive(receiveBuffer);
-                    if (receiveBuffer != null)
+                    if (bnetSock.Receive(receiveBuffer) > 0)
                     {
+                        this.getHandleMsg(BnetCode.AuthInfoSuccess);
                         break;
                     }
                 }

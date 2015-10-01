@@ -21,6 +21,11 @@ namespace Bnet.BnetConnect
 
         }
 
+        public void setBnetByte(byte byteData)
+        {
+            bnetData.Add(byteData);
+        }
+
         public void setBnetByte(byte[] byteData)
         {
             foreach (byte data in byteData)
@@ -29,11 +34,9 @@ namespace Bnet.BnetConnect
             }
         }
 
-        public void setBnetByte(UInt32 intData, bool isVariable = false)
+        public void setBnetByte(Int32 intData, bool isVariable = false)
         {
             byte[] bData = BitConverter.GetBytes(intData);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(bData);
             foreach (byte data in bData)
             {
                 bnetData.Add(data);
@@ -47,9 +50,10 @@ namespace Bnet.BnetConnect
             {
                 byte[] bData = bnetHelper.Hex2Byte(hexData);
                 this.setBnetByte(bData);
+                this.setBnetByte((byte) 0);
             }
             else {
-                UInt32 intData = UInt32.Parse(hexData, System.Globalization.NumberStyles.AllowHexSpecifier);
+                Int32 intData = Int32.Parse(hexData, System.Globalization.NumberStyles.AllowHexSpecifier);
                 this.setBnetByte(intData, isVariable);
             }
         }

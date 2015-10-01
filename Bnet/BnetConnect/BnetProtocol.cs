@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace Bnet.BnetConnect
 {
@@ -19,7 +20,6 @@ namespace Bnet.BnetConnect
 
         public BnetProtocol()
         {
-
         }
 
         public void setBnetByte(byte byteData)
@@ -29,28 +29,24 @@ namespace Bnet.BnetConnect
 
         public void setBnetByte(byte[] byteData)
         {
-            foreach (byte data in byteData)
-            {
-                bnetData.Add(data);
-            }
+            bnetData.AddRange(byteData);
+        }
+
+        public void setBnetByte(long longData, bool isVariable = false)
+        {
+            setBnetByte((int)longData);
         }
 
         public void setBnetByte(Int32 intData, bool isVariable = false)
         {
             byte[] bData = BitConverter.GetBytes(intData);
-            foreach (byte data in bData)
-            {
-                bnetData.Add(data);
-            }
+            bnetData.AddRange(bData);
         }
 
         public void setBnetByte(UInt32 intData, bool isVariable = false)
         {
             byte[] bData = BitConverter.GetBytes(intData);
-            foreach (byte data in bData)
-            {
-                bnetData.Add(data);
-            }
+            bnetData.AddRange(bData);
         }
 
         public void setBnetByte(String strData, bool isVariable = false)
@@ -60,7 +56,7 @@ namespace Bnet.BnetConnect
             {
                 byte[] bData = bnetHelper.Hex2Byte(hexData);
                 this.setBnetByte(bData);
-                this.setBnetByte((byte) 0);
+                this.setBnetByte((byte) 0x00);
             }
             else {
                 Int32 intData = Int32.Parse(hexData, System.Globalization.NumberStyles.AllowHexSpecifier);
@@ -110,24 +106,23 @@ namespace Bnet.BnetConnect
             return bnetPacketSt;
         }
 
-        public uint[] encriptDobuleHash(String str)
+        public byte[] encriptDobuleHash(String str)
         {
-            byte[] data = Encoding.ASCII.GetBytes(str);
+            List<byte> data = new List<byte>(Encoding.ASCII.GetBytes(str.ToLower()));
+            data.Add((byte)0x00);
             byte[] clientData = BitConverter.GetBytes(this.clientToken);
             byte[] serverData = BitConverter.GetBytes(this.serverToken);
 
-            uint[] hash = bnetHelper.blockHash(data);
+            SHA1 sha1 = new SHA1Managed();
+            byte[] sha1data = sha1.ComputeHash(data.ToArray());
 
             List<byte> buff = new List<byte>();
             buff.AddRange(clientData);
             buff.AddRange(serverData);
+            buff.AddRange(sha1data);
 
-            for(int i=0; i<5; i++)
-            {
-                byte[] hashData = BitConverter.GetBytes(hash[i]);
-                buff.AddRange(hashData);
-            }
-            return bnetHelper.blockHash(buff.ToArray());
+            sha1data = sha1.ComputeHash(buff.ToArray());
+            return sha1data.ToArray();
         }
 
         public List<byte> getBnetPacket()

@@ -101,6 +101,7 @@ namespace Bnet
                                 case BnetPacketModel.SID_PING:
                                     bnetProtocol.setBnetByte(bnetPackSt.pack_data.ToArray());
                                     bnetProtocol.send(bnetSock, BnetPacketModel.SID_PING);
+                                    this.getHandleMsg(BnetCode.ConnectionPING);
                                     break;
                                 case BnetPacketModel.SID_AUTH_INFO:
                                     bnetProtocol.nlsRevision = bnetPacketStream.readDword(bnetPackSt.pack_data.ToArray(), 0);
@@ -123,10 +124,12 @@ namespace Bnet
                                     bnetProtocol.setBnetByte("war3.exe 03/18/11 20:03:55 471040", true);
                                     bnetProtocol.setBnetByte("Chat", true);
                                     bnetProtocol.send(bnetSock, BnetPacketModel.SID_AUTH_CHECK);
+                                    this.getHandleMsg(BnetCode.ConnectionAUTH_INFO);
                                     break;
                                 case BnetPacketModel.SID_AUTH_CHECK:
                                     bnetResult = BitConverter.ToInt32(bnetPackSt.pack_data.ToArray(), 0);
                                     if (bnetResult != 0) {
+                                        bnetConKeep = false;
                                         switch (bnetResult)
                                         {
                                             case 0x201:
@@ -138,15 +141,15 @@ namespace Bnet
                                         }
                                     } else
                                     {
-                                        uint[] bnetPwHash = bnetProtocol.encriptDobuleHash(bnetUserPw);
+                                        byte[] bnetPwHash = bnetProtocol.encriptDobuleHash(bnetUserPw);
 
                                         bnetProtocol.setBnetByte(bnetProtocol.clientToken);
                                         bnetProtocol.setBnetByte(bnetProtocol.serverToken);
-                                        bnetProtocol.setBnetByte(bnetPwHash[0]);
-                                        bnetProtocol.setBnetByte(bnetPwHash[1]);
-                                        bnetProtocol.setBnetByte(bnetPwHash[2]);
-                                        bnetProtocol.setBnetByte(bnetPwHash[3]);
-                                        bnetProtocol.setBnetByte(bnetPwHash[4]);
+                                        bnetProtocol.setBnetByte(BitConverter.ToUInt32(bnetPwHash, 0));
+                                        bnetProtocol.setBnetByte(BitConverter.ToUInt32(bnetPwHash, 4));
+                                        bnetProtocol.setBnetByte(BitConverter.ToUInt32(bnetPwHash, 8));
+                                        bnetProtocol.setBnetByte(BitConverter.ToUInt32(bnetPwHash, 12));
+                                        bnetProtocol.setBnetByte(BitConverter.ToUInt32(bnetPwHash, 16));
                                         bnetProtocol.setBnetByte(bnetUsrId, true);
                                         bnetProtocol.send(bnetSock, BnetPacketModel.SID_LOGONRESPONSE2);
                                     }

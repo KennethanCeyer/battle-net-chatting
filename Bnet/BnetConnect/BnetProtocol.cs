@@ -18,30 +18,48 @@ namespace Bnet.BnetConnect
 
         }
 
-        public void setBnetByte(String hexData, bool isVariable = false)
+        public void setBnetByte(byte[] byteData)
         {
-            int intData = int.Parse(hexData, System.Globalization.NumberStyles.AllowHexSpecifier);
-            this.setBnetByte(intData);
+            foreach (byte data in byteData)
+            {
+                bnetData.Add(data);
+            }
         }
 
-        public void setBnetByte(int intData, bool isVariable = false)
+        public void setBnetByte(UInt32 intData, bool isVariable = false)
         {
             byte[] bData = BitConverter.GetBytes(intData);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(bData);
             foreach (byte data in bData)
             {
                 bnetData.Add(data);
             }
         }
 
-        public void setBnetString(String strData, bool isVariable = false)
+        public void setBnetByte(String strData, bool isVariable = false)
         {
             String hexData = bnetHelper.Acsii2Hex(strData);
-            this.setBnetByte(hexData, isVariable);
+            if (isVariable)
+            {
+                byte[] bData = bnetHelper.Hex2Byte(hexData);
+                this.setBnetByte(bData);
+            }
+            else {
+                UInt32 intData = UInt32.Parse(hexData, System.Globalization.NumberStyles.AllowHexSpecifier);
+                this.setBnetByte(intData, isVariable);
+            }
         }
 
-        public byte[] getBnetPacket(byte[] data)
+        public void send(System.Net.Sockets.Socket bnetSock)
         {
-            return null;
+            bnetSock.Send(bnetData.ToArray());
+            bnetData = null;
+        }
+
+        public List<byte> getBnetPacket()
+        {
+            return bnetData;
         }
     }
 }

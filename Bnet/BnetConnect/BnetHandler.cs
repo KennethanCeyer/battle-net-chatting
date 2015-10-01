@@ -16,14 +16,16 @@ namespace Bnet.BnetConnect
         {
             ConnectionWithServer,
             ConnectionFailed,
-            ConnectionSuccess
+            ConnectionSuccess,
+            AuthInfoSuccess
         };
 
         private String[] BnetMsg =
         {
             "서버와의 연결을 시도하고 있습니다.",
             "서버와의 연결에 실패하였습니다.",
-            "연결이 정상적으로 완료되었습니다."
+            "연결이 정상적으로 완료되었습니다.",
+            "연결정보 송신이 정상적으로 완료되었습니다."
         };
 
         public BnetHandler()

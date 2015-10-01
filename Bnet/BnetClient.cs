@@ -18,7 +18,7 @@ namespace Bnet
         private Socket bnetSock;
         private BnetProtocol bnetProtocol = new BnetProtocol();
         private List<Byte> sockBuffer = new List<Byte>();
-        private String bnetUsrId, bnetUserPw;
+        private String bnetUsrId, bnetUserPw, bnetUserUid;
         public BnetClient(String bnetConIP, String bnetConPort)
         {
             this.debugMode = true;
@@ -155,12 +155,14 @@ namespace Bnet
                                     }
                                     break;
                                 case BnetPacketModel.SID_LOGONRESPONSE2:
-                                    bnetConKeep = false;
                                     bnetResult = BitConverter.ToInt32(bnetPackSt.pack_data.ToArray(), 0);
                                     switch(bnetResult)
                                     {
                                         case 0x00:
                                             this.getHandleMsg(BnetCode.LOGONRESP_Success);
+                                            bnetProtocol.setBnetByte(0x00);
+                                            bnetProtocol.setBnetByte(0x00);
+                                            bnetProtocol.send(bnetSock, BnetPacketModel.SID_ENTERCHAT);
                                             break;
                                         case 0x01:
                                             this.getHandleMsg(BnetCode.LOGONRESP_FaildID);
@@ -175,6 +177,15 @@ namespace Bnet
                                             this.getHandleMsg(BnetCode.UnkownError);
                                             break;
                                     }
+                                    break;
+                                case BnetPacketModel.SID_ENTERCHAT:
+                                    bnetConKeep = false;
+                                    this.getHandleMsg(BnetCode.ENTERCHAT);
+                                    bnetProtocol.setBnetByte(0x01);
+                                    bnetProtocol.setBnetByte("ib", true);
+                                    bnetProtocol.send(bnetSock, BnetPacketModel.SID_JOINCHANNEL);
+                                    this.getHandleMsg(Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray()));
+                                    this.bnetUserUid = Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray());
                                     break;
                             }
                         }

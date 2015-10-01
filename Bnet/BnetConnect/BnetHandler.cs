@@ -19,7 +19,11 @@ namespace Bnet.BnetConnect
             ConnectionSuccess,
             AuthInfoSuccess,
             ServerBen,
-            UnkownError
+            UnkownError,
+            LOGONRESP_Success,
+            LOGONRESP_FaildID,
+            LOGONRESP_FaildPW,
+            LOGONRESP_LockedID
         };
 
         private String[] BnetMsg =
@@ -29,7 +33,11 @@ namespace Bnet.BnetConnect
             "연결이 정상적으로 완료되었습니다.",
             "연결정보 송신이 정상적으로 완료되었습니다.",
             "사용자의 IP는 서버에서 벤 당하셨습니다.",
-            "알 수 없는에러, 관리자에게 알려주시기 바랍니다."
+            "알 수 없는에러, 관리자에게 알려주시기 바랍니다.",
+            "LOGONRESP2 프로세스: 연결완료.",
+            "LOGONRESP2 프로세스: 연결실패_아이디문제.",
+            "LOGONRESP2 프로세스: 연결실패_패스워드문제.",
+            "LOGONRESP2 프로세스: 연결실패_아이디락."
         };
 
         public BnetHandler()

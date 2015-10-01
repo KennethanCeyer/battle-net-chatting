@@ -13,9 +13,9 @@ namespace Bnet.BnetConnect
         private List<byte> bnetData = new List<byte>();
         private BnetHelper bnetHelper = BnetHelper.getInstance();
         public byte bnetCommand;
-        public int serverToken = 0;
-        public int clientToken = 0;
-        public int nlsRevision = 0;
+        public uint serverToken = 0;
+        public uint clientToken = 0;
+        public uint nlsRevision = 0;
 
         public BnetProtocol()
         {
@@ -112,8 +112,8 @@ namespace Bnet.BnetConnect
 
         public uint[] encriptDobuleHash(String str)
         {
-            byte[] data = Encoding.UTF8.GetBytes(str);
-            uint[] hash = BnetHelper.blockHash(data);
+            byte[] data = Encoding.ASCII.GetBytes(str);
+            uint[] hash = bnetHelper.blockHash(data);
 
             List<byte> buff = new List<byte>();
             buff.AddRange(BitConverter.GetBytes(this.clientToken));
@@ -123,7 +123,7 @@ namespace Bnet.BnetConnect
             {
                 buff.AddRange(BitConverter.GetBytes(hash[i]));
             }
-            return BnetHelper.blockHash(buff.ToArray());
+            return bnetHelper.blockHash(buff.ToArray());
         }
 
         public List<byte> getBnetPacket()

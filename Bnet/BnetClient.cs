@@ -22,7 +22,7 @@ namespace Bnet
         public BnetClient(String bnetConIP, String bnetConPort)
         {
             this.debugMode = true;
-            bnetProtocol.clientToken = Math.Abs(new Random().Next());
+            bnetProtocol.clientToken = (uint) Math.Abs(new Random().Next());
             bnetConInfo = new Dictionary<String, String>();
             bnetConInfo.Add("ip", bnetConIP);
             bnetConInfo.Add("port", bnetConPort);
@@ -77,6 +77,7 @@ namespace Bnet
             bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_AUTH_INFO);
 
             bool bnetConKeep = true;
+            BnetPacketStream bnetPacketStream = new BnetPacketStream();
             while (bnetConKeep)
             {
                 byte[] receiveBuffer = new byte[1024];
@@ -86,6 +87,7 @@ namespace Bnet
                     {
                         if(receiveBuffer[0] == 0xFF)
                         {
+                            int bnetResult;
                             BnetPacketStruct bnetPackSt = bnetProtocol.decapsulize(receiveBuffer);
                             switch(bnetPackSt.packet_id)
                             {
@@ -101,8 +103,8 @@ namespace Bnet
                                     bnetProtocol.send(bnetSock, BnetPacketModel.SID_PING);
                                     break;
                                 case BnetPacketModel.SID_AUTH_INFO:
-                                    bnetProtocol.nlsRevision = (bnetPackSt.pack_data[1] & 0x000000FF) | (bnetPackSt.pack_data[2] << 8 & 0x0000FF00);
-                                    bnetProtocol.serverToken = (bnetPackSt.pack_data[2] & 0x000000FF) | (bnetPackSt.pack_data[3] << 8 & 0x0000FF00);
+                                    bnetProtocol.nlsRevision = bnetPacketStream.readDword(bnetPackSt.pack_data.ToArray(), 0);
+                                    bnetProtocol.serverToken = bnetPacketStream.readDword(bnetPackSt.pack_data.ToArray(), 4);
 
                                     bnetProtocol.setBnetByte(bnetProtocol.clientToken);
                                     bnetProtocol.setBnetByte(0x00000000); // EXE Version
@@ -123,10 +125,9 @@ namespace Bnet
                                     bnetProtocol.send(bnetSock, BnetPacketModel.SID_AUTH_CHECK);
                                     break;
                                 case BnetPacketModel.SID_AUTH_CHECK:
-                                    int result = BitConverter.ToInt32(bnetPackSt.pack_data.ToArray(), 0);
-                                    bnetConKeep = false;
-                                    if (result != 0) {
-                                        switch (result)
+                                    bnetResult = BitConverter.ToInt32(bnetPackSt.pack_data.ToArray(), 0);
+                                    if (bnetResult != 0) {
+                                        switch (bnetResult)
                                         {
                                             case 0x201:
                                                 this.getHandleMsg(BnetCode.ServerBen);
@@ -148,6 +149,28 @@ namespace Bnet
                                         bnetProtocol.setBnetByte(bnetPwHash[4]);
                                         bnetProtocol.setBnetByte(bnetUsrId, true);
                                         bnetProtocol.send(bnetSock, BnetPacketModel.SID_LOGONRESPONSE2);
+                                    }
+                                    break;
+                                case BnetPacketModel.SID_LOGONRESPONSE2:
+                                    bnetConKeep = false;
+                                    bnetResult = BitConverter.ToInt32(bnetPackSt.pack_data.ToArray(), 0);
+                                    switch(bnetResult)
+                                    {
+                                        case 0x00:
+                                            this.getHandleMsg(BnetCode.LOGONRESP_Success);
+                                            break;
+                                        case 0x01:
+                                            this.getHandleMsg(BnetCode.LOGONRESP_FaildID);
+                                            break;
+                                        case 0x02:
+                                            this.getHandleMsg(BnetCode.LOGONRESP_FaildPW);
+                                            break;
+                                        case 0x06:
+                                            this.getHandleMsg(BnetCode.LOGONRESP_LockedID);
+                                            break;
+                                        default:
+                                            this.getHandleMsg(BnetCode.UnkownError);
+                                            break;
                                     }
                                     break;
                             }

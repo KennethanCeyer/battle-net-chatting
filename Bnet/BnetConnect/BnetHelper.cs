@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace Bnet.BnetConnect
 {
-    internal class BnetHelper
+    public class BnetHelper
     {
         private static BnetHelper instance;
 
@@ -49,13 +49,13 @@ namespace Bnet.BnetConnect
             return bytes;
         }
 
-        public static int Hex2Int(char hex)
+        public int Hex2Int(char hex)
         {
             int val = (int)hex;
             return val - (val < 58 ? 48 : 55);
         }
 
-        public static uint[] blockHash(byte[] hashData)
+        public uint[] blockHash(byte[] hashData)
         {
             // Allocate enough room for the 0x40 bytes and the 5 starting bytes
             uint[] hashBuffer = new uint[21];
@@ -76,7 +76,7 @@ namespace Bnet.BnetConnect
                 if (subLength > 0x40)
                     subLength = 0x40;
 
-                doHash(hashBuffer);
+                hashBuffer = doHash(hashBuffer);
             }
 
             return hashBuffer;
@@ -88,7 +88,7 @@ namespace Bnet.BnetConnect
      * @param hashBuffer
      *            The current 0x40 bytes we're hashing.
      */
-        private static void doHash(uint[] hashBuffer)
+        private uint[] doHash(uint[] hashBuffer)
         {
             uint[] buf = new uint[0x50];
             uint dw, a, b, c, d, e;
@@ -166,6 +166,8 @@ namespace Bnet.BnetConnect
             hashBuffer[2] += c;
             hashBuffer[3] += d;
             hashBuffer[4] += e;
+
+            return hashBuffer;
         }
     }
 }

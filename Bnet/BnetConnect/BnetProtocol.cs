@@ -113,15 +113,14 @@ namespace Bnet.BnetConnect
             byte[] clientData = BitConverter.GetBytes(this.clientToken);
             byte[] serverData = BitConverter.GetBytes(this.serverToken);
 
-            SHA1 sha1 = new SHA1Managed();
-            byte[] sha1data = sha1.ComputeHash(data.ToArray());
+            byte[] sha1data = BnetHelper.Hash(data.ToArray());
 
             List<byte> buff = new List<byte>();
             buff.AddRange(clientData);
             buff.AddRange(serverData);
             buff.AddRange(sha1data);
 
-            sha1data = sha1.ComputeHash(buff.ToArray());
+            sha1data = BnetHelper.Hash(buff.ToArray());
             return sha1data.ToArray();
         }
 

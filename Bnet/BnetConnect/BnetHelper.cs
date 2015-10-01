@@ -55,10 +55,10 @@ namespace Bnet.BnetConnect
             return val - (val < 58 ? 48 : 55);
         }
 
-        public uint[] blockHash(byte[] hashData)
+        public UInt32[] blockHash(byte[] hashData)
         {
             // Allocate enough room for the 0x40 bytes and the 5 starting bytes
-            uint[] hashBuffer = new uint[21];
+            UInt32[] hashBuffer = new UInt32[21];
 
             // Fill in the default values
             hashBuffer[0] = 0x67452301;
@@ -67,10 +67,10 @@ namespace Bnet.BnetConnect
             hashBuffer[3] = 0x10325476;
             hashBuffer[4] = 0xC3D2E1F0;
 
-            for (int i = 0; i < hashData.Count(); i += 0x40)
+            for (int i = 0; i < hashData.Length; i += 0x40)
             {
                 // Length of this subsection
-                int subLength = hashData.Count() - i;
+                int subLength = hashData.Length - i;
 
                 // subLength can't be more than 0x40
                 if (subLength > 0x40)
@@ -88,13 +88,13 @@ namespace Bnet.BnetConnect
      * @param hashBuffer
      *            The current 0x40 bytes we're hashing.
      */
-        private uint[] doHash(uint[] hashBuffer)
+        private UInt32[] doHash(UInt32[] hashBuffer)
         {
             uint[] buf = new uint[0x50];
             uint dw, a, b, c, d, e;
-            uint p;
+            int p;
 
-            uint i;
+            int i;
 
             for (i = 0; i < 0x10; i++)
                 buf[i] = hashBuffer[i + 5];

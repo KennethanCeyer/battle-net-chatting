@@ -113,15 +113,19 @@ namespace Bnet.BnetConnect
         public uint[] encriptDobuleHash(String str)
         {
             byte[] data = Encoding.ASCII.GetBytes(str);
+            byte[] clientData = BitConverter.GetBytes(this.clientToken);
+            byte[] serverData = BitConverter.GetBytes(this.serverToken);
+
             uint[] hash = bnetHelper.blockHash(data);
 
             List<byte> buff = new List<byte>();
-            buff.AddRange(BitConverter.GetBytes(this.clientToken));
-            buff.AddRange(BitConverter.GetBytes(this.serverToken));
+            buff.AddRange(clientData);
+            buff.AddRange(serverData);
 
             for(int i=0; i<5; i++)
             {
-                buff.AddRange(BitConverter.GetBytes(hash[i]));
+                byte[] hashData = BitConverter.GetBytes(hash[i]);
+                buff.AddRange(hashData);
             }
             return bnetHelper.blockHash(buff.ToArray());
         }

@@ -72,7 +72,7 @@ namespace Bnet.BnetConnect
             {
                 throw e;  // any serious error occurr
             }
-            bnetData = null;
+            bnetData.Clear();
         }
 
         public List<Byte> capsulize(List<byte> data, BnetPacketModel bnetCommand)
@@ -84,6 +84,20 @@ namespace Bnet.BnetConnect
             capsule.Add((byte)(((data.Count + 4) & 0xFF00) >> 8));
             capsule.AddRange(data);
             return capsule;
+        }
+
+        public BnetPacketStruct decapsulize(byte[] data)
+        {
+            BnetPacketStruct bnetPacketSt = new BnetPacketStruct();
+            bnetPacketSt.packet_id = (BnetPacketModel) data[1];
+            bnetPacketSt.packet_len = (uint) ((data[2] & 0x000000FF) | (data[3] << 8 & 0x0000FF00));
+
+            for (int i=4; i<bnetPacketSt.packet_len; i++)
+            {
+                bnetPacketSt.pack_data.Add(data[i]);
+            }
+
+            return bnetPacketSt;
         }
 
         public List<byte> getBnetPacket()

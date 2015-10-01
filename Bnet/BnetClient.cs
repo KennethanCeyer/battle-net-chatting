@@ -32,7 +32,6 @@ namespace Bnet
             IPAddress bnetServerIP = Dns.GetHostAddresses(bnetConInfo["ip"])[0];
             IPEndPoint bnetServerEP = new IPEndPoint(bnetServerIP, Int32.Parse(bnetConInfo["port"]));
             this.bnetSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            byte[] receiveBuffer = new byte[255];
 
             try
             {
@@ -42,18 +41,29 @@ namespace Bnet
             }
             catch (Exception e)
             {
-                this.getHandleMsg(BnetCode.ConnectionSuccess);
+                this.getHandleMsg(BnetCode.ConnectionFailed);
+                this.getHandleMsg(e.StackTrace);
             }
 
             this.bnetSock.Connect(bnetServerEP);
-            this.bnetSock.Send(BitConverter.GetBytes(0x01));
+            try
+            {
+                byte[] triedConnection = { 0x01 };
+                this.bnetSock.Send(triedConnection);
+            }
+            catch (Exception e)
+            {
+                this.getHandleMsg(BnetCode.ConnectionFailed);
+                this.getHandleMsg(e.StackTrace);
+            }
             this.getHandleMsg(BnetCode.ConnectionSuccess);
 
             Int32 bnetClientTimeOffset = Convert.ToInt32(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMilliseconds / -60000);
 
             bnetProtocol.setBnetByte(0x00000000);
             bnetProtocol.setBnetByte(0x49583836); // Platform IX86
-            bnetProtocol.setBnetByte(0x44534852); // Warcraft III
+            bnetProtocol.setBnetByte(0x44534852);
+            //bnetProtocol.setBnetByte(0x4452544c); // DRTL
             bnetProtocol.setBnetByte(0x00000000); // Version  0.0
             bnetProtocol.setBnetByte("koKR");     // Language
             bnetProtocol.setBnetByte(0x00000000);
@@ -64,19 +74,43 @@ namespace Bnet
             bnetProtocol.setBnetByte("Korea", true);
             bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_AUTH_INFO);
 
-            try {
-                while (true)
-                {
-                    if (bnetSock.Receive(receiveBuffer) > 0)
+            while (true)
+            {
+                byte[] receiveBuffer = new byte[1024];
+                try {
+                    int receiveLen = this.bnetSock.Receive(receiveBuffer);
+                    if (receiveLen > 0)
                     {
-                        this.getHandleMsg(BnetCode.AuthInfoSuccess);
+                        this.sockBuffer.AddRange(receiveBuffer);
+                        if(receiveBuffer[0] == 0xFF)
+                        {
+                            BnetPacketStruct bnetPackSt = bnetProtocol.decapsulize(this.sockBuffer.ToArray());
+                            switch(bnetPackSt.packet_id)
+                            {
+                                case BnetPacketModel.SID_OPTIONALWORK:
+                                case BnetPacketModel.SID_EXTRAWORK:
+                                case BnetPacketModel.SID_REQUIREDWORK:
+                                    break;
+                                case BnetPacketModel.SID_NULL:
+                                    bnetProtocol.send(bnetSock, BnetPacketModel.SID_NULL);
+                                    break;
+                                case BnetPacketModel.SID_PING:
+                                    bnetProtocol.setBnetByte(bnetPackSt.pack_data.ToArray());
+                                    break;
+
+                            }
+                        }
+                    }
+                    else
+                    {
                         break;
                     }
                 }
-            }
-            catch (SocketException e)
-            {
-                this.getHandleMsg(e.StackTrace);
+                catch (SocketException e)
+                {
+                    this.getHandleMsg(e.StackTrace);
+                    break;
+                }
             }
         }
     }

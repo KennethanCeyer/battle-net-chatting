@@ -25,7 +25,7 @@ namespace M16Chat_Windows
             {
                 MainSpinner.IsActive = true;
                 MessageDialogResult messageResult = await this.ShowMessageAsync("Authentication Information", String.Format("Username: {0}\nPassword: {1}", result.Username, result.Password));
-                this.bClient.Connect();
+                this.bClient.Connect(result.Username, result.Password);
             }
         }
 

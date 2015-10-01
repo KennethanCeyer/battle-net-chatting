@@ -17,7 +17,9 @@ namespace Bnet.BnetConnect
             ConnectionWithServer,
             ConnectionFailed,
             ConnectionSuccess,
-            AuthInfoSuccess
+            AuthInfoSuccess,
+            ServerBen,
+            UnkownError
         };
 
         private String[] BnetMsg =
@@ -25,7 +27,9 @@ namespace Bnet.BnetConnect
             "서버와의 연결을 시도하고 있습니다.",
             "서버와의 연결에 실패하였습니다.",
             "연결이 정상적으로 완료되었습니다.",
-            "연결정보 송신이 정상적으로 완료되었습니다."
+            "연결정보 송신이 정상적으로 완료되었습니다.",
+            "사용자의 IP는 서버에서 벤 당하셨습니다.",
+            "알 수 없는에러, 관리자에게 알려주시기 바랍니다."
         };
 
         public BnetHandler()

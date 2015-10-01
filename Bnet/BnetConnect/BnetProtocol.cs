@@ -15,6 +15,7 @@ namespace Bnet.BnetConnect
         public byte bnetCommand;
         public int serverToken = 0;
         public int clientToken = 0;
+        public int nlsRevision = 0;
 
         public BnetProtocol()
         {
@@ -98,6 +99,11 @@ namespace Bnet.BnetConnect
             }
 
             return bnetPacketSt;
+        }
+
+        public int[] encriptDobuleHash(String str)
+        {
+            return 0;
         }
 
         public List<byte> getBnetPacket()

@@ -18,6 +18,7 @@ namespace Bnet
         private Socket bnetSock;
         private BnetProtocol bnetProtocol = new BnetProtocol();
         private List<Byte> sockBuffer = new List<Byte>();
+        private String bnetUsrId, bnetUserPw;
         public BnetClient(String bnetConIP, String bnetConPort)
         {
             this.debugMode = true;
@@ -27,8 +28,9 @@ namespace Bnet
             bnetConInfo.Add("port", bnetConPort);
         }
 
-        public void Connect()
+        public void Connect(String userId, String userPw)
         {
+            bnetUsrId = userId; bnetUserPw = userPw;
             IPAddress bnetServerIP = Dns.GetHostAddresses(bnetConInfo["ip"])[0];
             IPEndPoint bnetServerEP = new IPEndPoint(bnetServerIP, Int32.Parse(bnetConInfo["port"]));
             this.bnetSock = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -74,17 +76,17 @@ namespace Bnet
             bnetProtocol.setBnetByte("Korea", true);
             bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_AUTH_INFO);
 
-            while (true)
+            bool bnetConKeep = true;
+            while (bnetConKeep)
             {
                 byte[] receiveBuffer = new byte[1024];
                 try {
                     int receiveLen = this.bnetSock.Receive(receiveBuffer);
                     if (receiveLen > 0)
                     {
-                        this.sockBuffer.AddRange(receiveBuffer);
                         if(receiveBuffer[0] == 0xFF)
                         {
-                            BnetPacketStruct bnetPackSt = bnetProtocol.decapsulize(this.sockBuffer.ToArray());
+                            BnetPacketStruct bnetPackSt = bnetProtocol.decapsulize(receiveBuffer);
                             switch(bnetPackSt.packet_id)
                             {
                                 case BnetPacketModel.SID_OPTIONALWORK:
@@ -96,8 +98,48 @@ namespace Bnet
                                     break;
                                 case BnetPacketModel.SID_PING:
                                     bnetProtocol.setBnetByte(bnetPackSt.pack_data.ToArray());
+                                    bnetProtocol.send(bnetSock, BnetPacketModel.SID_PING);
                                     break;
+                                case BnetPacketModel.SID_AUTH_INFO:
+                                    bnetProtocol.nlsRevision = (bnetPackSt.pack_data[1] & 0x000000FF) | (bnetPackSt.pack_data[2] << 8 & 0x0000FF00);
+                                    bnetProtocol.serverToken = (bnetPackSt.pack_data[2] & 0x000000FF) | (bnetPackSt.pack_data[3] << 8 & 0x0000FF00);
 
+                                    bnetProtocol.setBnetByte(bnetProtocol.clientToken);
+                                    bnetProtocol.setBnetByte(0x00000000); // EXE Version
+                                    bnetProtocol.setBnetByte(0x00000000); // EXE Hash
+                                    bnetProtocol.setBnetByte(0x00000001); // Number of CD-Key
+                                    bnetProtocol.setBnetByte(0x00000000); // Spawn CD-Key
+                                    bnetProtocol.setBnetByte(0x00000000);
+                                    bnetProtocol.setBnetByte(0x00000000);
+                                    bnetProtocol.setBnetByte(0x00000000);
+                                    bnetProtocol.setBnetByte(0x00000000);
+                                    bnetProtocol.setBnetByte(0x00000000);
+                                    bnetProtocol.setBnetByte(0x00000000);
+                                    bnetProtocol.setBnetByte(0x00000000);
+                                    bnetProtocol.setBnetByte(0x00000000);
+                                    bnetProtocol.setBnetByte(0x00000000);
+                                    bnetProtocol.setBnetByte("war3.exe 03/18/11 20:03:55 471040", true);
+                                    bnetProtocol.setBnetByte("Chat", true);
+                                    bnetProtocol.send(bnetSock, BnetPacketModel.SID_AUTH_CHECK);
+                                    break;
+                                case BnetPacketModel.SID_AUTH_CHECK:
+                                    int result = BitConverter.ToInt32(bnetPackSt.pack_data.ToArray(), 0);
+                                    bnetConKeep = false;
+                                    if (result != 0) {
+                                        switch (result)
+                                        {
+                                            case 0x201:
+                                                this.getHandleMsg(BnetCode.ServerBen);
+                                                break;
+                                            default:
+                                                this.getHandleMsg(BnetCode.UnkownError);
+                                                break;
+                                        }
+                                    } else
+                                    {
+
+                                    }
+                                    break;
                             }
                         }
                     }

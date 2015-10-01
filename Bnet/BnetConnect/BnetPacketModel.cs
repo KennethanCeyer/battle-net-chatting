@@ -125,4 +125,31 @@ namespace Bnet.BnetConnect
         SID_CLANMEMBERRANKCHANGE = 0x81,
         SID_CLANMEMBERINFORMATION = 0x82
     }
+
+    public enum BnetPacketEvent {
+        EID_UNKNOWN = 0x00,
+        EID_SHOWUSER = 0x01,
+        EID_JOIN = 0x02,
+        EID_LEAVE = 0x03,
+        EID_WHISPER = 0x04,
+        EID_TALK = 0x05,
+        EID_BROADCAST = 0x06,
+        EID_CHANNEL = 0x07,
+        EID_UNKNOWN_0x08 = 0x08,
+        EID_USERFLAGS = 0x09,
+        EID_WHISPERSENT = 0x0A,
+        EID_UNKNOWN_0x0B = 0x0B,
+        EID_UNKNOWN_0x0C = 0x0C,
+        EID_CHANNELFULL = 0x0D,
+        EID_CHANNELDOESNOTEXIST = 0x0E,
+        EID_CHANNELRESTRICTED = 0x0F,
+        EID_UNKNOWN_0x10 = 0x10,
+        EID_UNKNOWN_0x11 = 0x11,
+        EID_INFO = 0x12,
+        EID_ERROR = 0x13,
+        EID_UNKNOWN_0x14 = 0x24,
+        EID_UNKNOWN_0x15 = 0x15,
+        EID_UNKNOWN_0x16 = 0x16,
+        EID_EMOTE = 0x17,
+    }
 }

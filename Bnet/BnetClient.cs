@@ -17,6 +17,7 @@ namespace Bnet
         private static Dictionary<String, String> bnetConInfo;
         private Socket bnetSock;
         private BnetProtocol bnetProtocol = new BnetProtocol();
+        BnetHelper bnetHelper = BnetHelper.getInstance();
         private List<Byte> sockBuffer = new List<Byte>();
         private String bnetUsrId, bnetUserPw, bnetUserUid;
         public BnetClient(String bnetConIP, String bnetConPort)
@@ -78,7 +79,7 @@ namespace Bnet
 
             bool bnetConKeep = true;
             BnetPacketStream bnetPacketStream = new BnetPacketStream();
-            while (bnetConKeep)
+            while (bnetConKeep && bnetSock.Connected)
             {
                 byte[] receiveBuffer = new byte[1024];
                 try {
@@ -179,13 +180,48 @@ namespace Bnet
                                     }
                                     break;
                                 case BnetPacketModel.SID_ENTERCHAT:
-                                    bnetConKeep = false;
                                     this.getHandleMsg(BnetCode.ENTERCHAT);
                                     bnetProtocol.setBnetByte(0x01);
                                     bnetProtocol.setBnetByte("ib", true);
                                     bnetProtocol.send(bnetSock, BnetPacketModel.SID_JOINCHANNEL);
                                     this.getHandleMsg(Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray()));
                                     this.bnetUserUid = Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray());
+                                    break;
+                                case BnetPacketModel.SID_CHATEVENT:
+                                    BnetPacketEvent bnetPacketEvent = (BnetPacketEvent)BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 0);
+                                    uint flags = BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 4);
+                                    uint ping  = BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 8);
+                                    string user = bnetHelper.getStrFromBytes(bnetPackSt.pack_data.ToArray(), 20);
+                                    this.getHandleMsg(flags.ToString());
+                                    this.getHandleMsg(user);
+
+                                    switch(bnetPacketEvent)
+                                    {
+                                        case BnetPacketEvent.EID_CHANNEL:
+                                            break;
+                                        case BnetPacketEvent.EID_SHOWUSER:
+                                            break;
+                                        case BnetPacketEvent.EID_ERROR:
+                                        case BnetPacketEvent.EID_INFO:
+                                            break;
+                                        case BnetPacketEvent.EID_BROADCAST:
+                                            break;
+                                        case BnetPacketEvent.EID_WHISPER:
+                                        case BnetPacketEvent.EID_WHISPERSENT:
+                                        case BnetPacketEvent.EID_TALK:
+                                            break;
+                                        case BnetPacketEvent.EID_JOIN:
+                                            break;
+                                        case BnetPacketEvent.EID_LEAVE:
+                                            break;
+                                        default:
+                                            bnetProtocol.setBnetByte(0x00000000);
+                                            bnetProtocol.setBnetByte(0x00000000);
+                                            bnetProtocol.setBnetByte(0x00000000);
+                                            bnetProtocol.setBnetByte(0x00000000);
+                                            bnetProtocol.send(bnetSock, BnetPacketModel.SID_CHECKAD);
+                                            break;
+                                    }
                                     break;
                             }
                         }
@@ -200,6 +236,7 @@ namespace Bnet
                     this.getHandleMsg(e.StackTrace);
                     break;
                 }
+                Thread.Sleep(50);
             }
         }
     }

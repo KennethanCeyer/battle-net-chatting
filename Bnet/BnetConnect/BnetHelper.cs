@@ -30,7 +30,7 @@ namespace Bnet.BnetConnect
             String hex = "";
             foreach (char c in ascii)
             {
-                hex += ((int) c).ToString("X");
+                hex += ((int)c).ToString("X");
             }
             return hex;
         }
@@ -54,6 +54,21 @@ namespace Bnet.BnetConnect
         {
             int val = (int)hex;
             return val - (val < 58 ? 48 : 55);
+        }
+
+        public String getStrFromBytes(byte[] data, int pos = 0)
+        {
+            List<byte> current = new List<byte>();
+            for(var i=pos; i<data.Length; i++)
+            {
+                if(data[pos] == 0x00)
+                {
+                    break;
+                }
+                current.Add(data[pos]);
+            }
+            String value = Encoding.UTF8.GetString(current.ToArray());
+            return value;
         }
 
         private static uint ROL(uint val, int shift)

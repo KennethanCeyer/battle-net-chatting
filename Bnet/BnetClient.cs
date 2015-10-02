@@ -17,11 +17,18 @@ namespace Bnet
         public ManualResetEvent connectDone = new ManualResetEvent(false);
         public ManualResetEvent receiveDone = new ManualResetEvent(false);
 
+        public delegate void OnChatLoginedDelegate(String user);
+        public delegate void OnChatUserDelegate(String user, String message);
+
+        public static event OnChatLoginedDelegate OnChatLogined;
+        public static event OnChatUserDelegate OnChatUser;
+
         private static Dictionary<String, String> bnetConInfo;
         private Socket bnetSock;
         private BnetProtocol bnetProtocol = new BnetProtocol();
         private byte[] sockBuffer = new byte[1024];
-        private String bnetUsrId, bnetUserPw, bnetUserUid;
+        private String bnetUsrId, bnetUserPw;
+        public String bnetUserUid;
         public BnetHelper bnetHelper = BnetHelper.getInstance();
         public BnetPacketStream bnetPacketStream = new BnetPacketStream();
         public BnetClient(String bnetConIP, String bnetConPort)
@@ -60,39 +67,26 @@ namespace Bnet
         {
             string[] Song =
             {
-                "나 스무살 적에 하루를 견디고",
-                "불안한 잠자리에 누울 때면",
-                "내일 뭐하지 내일 뭐하지 걱정을 했지",
-                "두 눈을 감아도 통 잠은 안 오고",
-                "가슴은 아프도록 답답할 때",
-                "난 왜 안 되지 왜 난 안 되지 되뇌었지",
-                "말하는 대로 말하는 대로",
-                "될 수 있다곤 믿지 않았지",
-                "믿을 수 없었지",
-                "마음먹은 대로 생각한 대로",
-                "할 수 있단 건 거짓말 같았지",
-                "고개를 저었지",
-                "그러던 어느 날 내 맘에 찾아온",
-                "작지만 놀라운 깨달음이",
-                "내일 뭘 할지 내일 뭘 할지 꿈꾸게 했지",
-                "사실은 한 번도 미친 듯 그렇게",
-                "달려든 적이 없었다는 것을",
-                "생각해 봤지 일으켜 세웠지 내 자신을",
-                "말하는 대로 말하는 대로",
-                "될 수 있단 걸 눈으로 본 순간",
-                "믿어보기로 했지",
-                "마음먹은 대로 생각한 대로",
-                "할 수 있단 걸 알게 된 순간",
-                "고갤 끄덕였지",
+                "안녕하세요 M16 IB채널 봇입니다.",
+                "이곳은 Impossible Bossies 클랜 채널입니다.",
+                "불가능한 보스잡기 게임을 주관하는 클랜입니다~",
+                "있다 저녁에 한 겜할분, 대기하시길"
             };
             uint i = 0;
             while (true)
             {
                 bnetProtocol.setBnetByte(Song[i], true);
                 bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_CHATCOMMAND);
-                Thread.Sleep(2000);
+                Thread.Sleep(15000);
                 i = (uint) ((i + 1) % Song.Length);
             }
+        }
+
+        public void setChatMessage(String message)
+        {
+            receiveDone.WaitOne();
+            bnetProtocol.setBnetByte(message, true);
+            bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_CHATCOMMAND);
         }
 
         public void OnConnectCallback(IAsyncResult IAR)
@@ -250,7 +244,8 @@ namespace Bnet
                                 bnetProtocol.setBnetByte("ib", true);
                                 bnetProtocol.send(recvSock, BnetPacketModel.SID_JOINCHANNEL);
                                 this.getHandleMsg(Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray()));
-                                this.bnetUserUid = Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray());
+                                this.bnetUserUid = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                OnChatLogined(this.bnetUserUid);
                                 Thread musicBotThread = new Thread(new ThreadStart(MusicBot));
                                 musicBotThread.Start();
                                 break;
@@ -279,6 +274,7 @@ namespace Bnet
                                     case BnetPacketEvent.EID_TALK:
                                         String message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                         this.getHandleMsg(message);
+                                        OnChatUser(user, message);
                                         break;
                                     case BnetPacketEvent.EID_JOIN:
                                         break;

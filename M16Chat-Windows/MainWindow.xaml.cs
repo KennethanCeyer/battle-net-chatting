@@ -2,6 +2,9 @@
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using Bnet;
+using System.Diagnostics;
+using System.Windows.Threading;
+using System.Windows.Input;
 
 namespace M16Chat_Windows
 {
@@ -34,9 +37,47 @@ namespace M16Chat_Windows
             InitializeComponent();
         }
 
+        private void OnChatLoginHandler(String user)
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                MainSpinner.IsActive = false;
+                MainChatBox.Text += user + "님이 입장하셨습니다.\r\n";
+            }));
+        }
+
+        private void OnChatUserHandler(String user, String message)
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
+                MainChatBox.Text += user + ": " + message + "\r\n";
+            }));
+        }
+
         private void Initializing(object sender, RoutedEventArgs e)
         {
+            BnetClient.OnChatUser += new BnetClient.OnChatUserDelegate(OnChatUserHandler);
+            BnetClient.OnChatLogined += new BnetClient.OnChatLoginedDelegate(OnChatLoginHandler);
             this.ShowLoginDialog(sender, e);
+        }
+
+        private void OnChatSend(object sender, RoutedEventArgs e)
+        {
+            String input = this.MainChatInput.Text;
+            if(input != "")
+            {
+                bClient.setChatMessage(input);
+                this.MainChatInput.Text = "";
+                this.MainChatBox.Text += bClient.bnetUserUid + ": " + input + "\r\n";
+            }
+        }
+
+        private void OnInputPress(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                e.Handled = true;
+                OnChatSend(sender, e);
+            }
         }
     }
 }

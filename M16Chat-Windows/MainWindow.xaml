@@ -21,12 +21,18 @@
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="80"/>
                     </Grid.RowDefinitions>
-                    <TextBox x:Name="MainChatBox">aa</TextBox>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="80" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="MainChatBox" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" IsReadOnlyCaretVisible="True"></TextBox>
+                    <TextBox x:Name="MainChatInput" Grid.Column="0" Grid.Row="1" KeyDown="OnInputPress"/>
+                    <Button Grid.Column="1" Grid.Row="1" Content="보내기" Click="OnChatSend"></Button>
                 </Grid>
             </TabItem>
-            <TabItem Header="친구">
+            <TabItem Header="사용자">
                 <Grid Margin="5">
                     <TextBlock>bb</TextBlock>
                 </Grid>

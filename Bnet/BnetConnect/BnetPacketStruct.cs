@@ -14,7 +14,7 @@ namespace Bnet.BnetConnect
         {
             if(pos == 0)
             {
-                pos = cursor + 1;
+                pos = (cursor == 0) ? 0 : cursor + 1;
             }
             BnetPacketStream bnetPacketStream = new BnetPacketStream();
             cursor = bnetPacketStream.getIndexFromBytes(data, pos);

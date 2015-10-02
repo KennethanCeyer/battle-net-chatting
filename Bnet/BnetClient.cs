@@ -296,11 +296,10 @@ namespace Bnet
                                         OnChatError(user, message);
                                         break;
                                     case BnetPacketEvent.EID_INFO:
+                                    case BnetPacketEvent.EID_BROADCAST:
                                         message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                         this.getHandleMsg(message);
                                         OnChatInfo(user, message);
-                                        break;
-                                    case BnetPacketEvent.EID_BROADCAST:
                                         break;
                                     case BnetPacketEvent.EID_WHISPER:
                                     case BnetPacketEvent.EID_WHISPERSENT:

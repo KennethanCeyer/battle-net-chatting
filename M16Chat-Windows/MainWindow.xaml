@@ -6,6 +6,7 @@
         EnableDWMDropShadow="True"
         WindowTransitionsEnabled="False"
         WindowStartupLocation="CenterScreen"
+        Icon="./Resources/Icon.ico"
         ResizeMode="NoResize"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
@@ -31,10 +32,23 @@
                         <ListBox x:Name="MainChatList" ScrollViewer.HorizontalScrollBarVisibility="Disabled"></ListBox>
                     </Border>
                     <TextBox x:Name="MainChatInput" Grid.Column="0" Grid.Row="1" KeyDown="OnInputPress" BorderBrush="#D8D8D8" FontFamily="Malgun Gothic" />
-                    <Button Grid.Column="1" Grid.Row="1" Content="보내기" Click="OnChatSend" FontFamily="Malgun Gothic" FontSize="12" FontWeight="Normal"></Button>
+                    <Button Grid.Column="1" Grid.Row="1" Content="보내기" Click="OnChatSend" FontFamily="Malgun Gothic" FontSize="12" FontWeight="Normal" Background="#FFE36F24" Foreground="White" BorderBrush="#FFC34700" Controls:ButtonHelper.CornerRadius="5" ForceCursor="True" Cursor="Hand"/>
                 </Grid>
             </TabItem>
             <TabItem Header="사용자">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderBrush="#D8D8D8" BorderThickness="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0">
+                        <ListBox x:Name="UsersList" ScrollViewer.HorizontalScrollBarVisibility="Disabled"></ListBox>
+                    </Border>
+                </Grid>
+            </TabItem>
+            <TabItem Header="친구">
                 <Grid Margin="5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>

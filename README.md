@@ -13,6 +13,7 @@
 - Developed by `PIGNOSE`
 - Optimized on `M16 Server`
 - It has followed of [Bnet docs](https://bnetdocs.org/?op=doc&did=16)
+- It works only Windows Platform.
 
 ### Contribution
 
@@ -25,6 +26,10 @@
 - This is for Windows.
 - You can use for android app, If you use that one.
 - [Github M16-Chat-For-Android](https://github.com/KennethanCeyer/m16chat-android)
+
+### Install
+
+- Check The [Release](https://github.com/KennethanCeyer/M16-Chatting-For-Windows/releases/)
 
 ----
 

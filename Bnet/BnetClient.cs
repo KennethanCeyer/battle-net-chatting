@@ -24,6 +24,7 @@ namespace Bnet
         public delegate void OnChatJoinDelegate(String user);
         public delegate void OnChatWhisperDelegate(String user, String message);
         public delegate void OnChatSockErrorDelegate();
+        public delegate void OnChatFriendsUpdateDelegate(BnetFriends[] bnetFriends);
 
         public static event OnChatLoginedDelegate OnChatLogined;
         public static event OnChatUserDelegate OnChatUser;
@@ -32,7 +33,9 @@ namespace Bnet
         public static event OnChatJoinDelegate OnChatJoin;
         public static event OnChatWhisperDelegate OnChatWhisper;
         public static event OnChatSockErrorDelegate OnChatSockError;
+        public static event OnChatFriendsUpdateDelegate OnChatFriendsUpdate;
 
+        private const string firstJoinChannel = "ib";
         private static Dictionary<String, String> bnetConInfo;
         private Socket bnetSock;
         private BnetProtocol bnetProtocol = new BnetProtocol();
@@ -48,6 +51,11 @@ namespace Bnet
             bnetConInfo = new Dictionary<String, String>();
             bnetConInfo.Add("ip", bnetConIP);
             bnetConInfo.Add("port", bnetConPort);
+        }
+
+        public void commandFriendsUpdate(Socket bnetSock)
+        {
+            bnetProtocol.send(bnetSock, BnetPacketModel.SID_FRIENDSLIST);
         }
 
         public void Connect(String userId, String userPw)
@@ -256,12 +264,13 @@ namespace Bnet
                             case BnetPacketModel.SID_ENTERCHAT:
                                 this.getHandleMsg(BnetCode.ENTERCHAT);
                                 bnetProtocol.setBnetByte(0x01);
-                                bnetProtocol.setBnetByte("ib", true);
-                                bnetProtocol.send(recvSock, BnetPacketModel.SID_FRIENDSLIST);
+                                bnetProtocol.setBnetByte(firstJoinChannel, true);
                                 bnetProtocol.send(recvSock, BnetPacketModel.SID_JOINCHANNEL);
                                 this.getHandleMsg(Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray()));
                                 this.bnetUserUid = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                 OnChatLogined(this.bnetUserUid);
+                                OnChatInfo(this.bnetUserUid, firstJoinChannel + " 채널에 입장.");
+                                this.commandFriendsUpdate(this.bnetSock);
                                 //Thread musicBotThread = new Thread(new ThreadStart(MusicBot));
                                 //musicBotThread.Start();
                                 break;
@@ -309,7 +318,6 @@ namespace Bnet
                                         this.getHandleMsg("Join: " + user + " : " + message);
                                         OnChatJoin(user);
                                         break;
-                                        break;
                                     case BnetPacketEvent.EID_LEAVE:
                                         break;
                                     default:
@@ -327,14 +335,23 @@ namespace Bnet
                                 BnetFriends[] bnetFriends = new BnetFriends[(int)cnt];
                                 this.getHandleMsg(BnetCode.Search_FriendList);
                                 this.getHandleMsg("탐색 된 프랜즈 " + cnt.ToString() + " 명");
-                                for (int i = 0; i < cnt; i++)
+                                int player;
+                                for (player = 0; player < cnt; player++)
                                 {
-                                    bnetFriends[i].name = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                    bnetFriends[player].name = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                     seek = bnetPackSt.getSeek();
-                                    bnetFriends[i].status = bnetPackSt.pack_data[(int)seek++];
-                                    bnetFriends[i].location = bnetPackSt.pack_data[(int)seek++];
-                                    bnetFriends[i].product = BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), (int)seek);
-                                    bnetFriends[i].locationName = bnetPackSt.getData(bnetPackSt.pack_data.ToArray(), seek + 4);
+                                    bnetFriends[player].status = bnetPackSt.pack_data[(int)seek++];
+                                    bnetFriends[player].location = bnetPackSt.pack_data[(int)seek++];
+                                    bnetFriends[player].product = BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), (int)seek);
+                                    bnetFriends[player].locationName = bnetPackSt.getData(bnetPackSt.pack_data.ToArray(), seek + 4);
+                                }
+
+                                try {
+                                    OnChatFriendsUpdate(bnetFriends);
+                                }
+                                catch(NullReferenceException e)
+                                {
+                                    this.getHandleMsg(e.StackTrace);
                                 }
                                 break;
                         }

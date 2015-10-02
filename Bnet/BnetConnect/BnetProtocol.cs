@@ -66,7 +66,7 @@ namespace Bnet.BnetConnect
 
         public void send(Socket bnetSock, BnetPacketModel bnetCommand = 0x00)
         {
-            if(bnetData.Count > 0 && bnetData[0] != 0xFF)
+            if(bnetData.Count <= 0 || (bnetData.Count > 0 && bnetData[0] != 0xFF))
             {
                 bnetData = this.capsulize(bnetData, bnetCommand);
             }

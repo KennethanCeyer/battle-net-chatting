@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media;
 using M16Chat_Windows.BnetChatting;
+using Bnet.BnetConnect;
 
 namespace M16Chat_Windows
 {
@@ -37,18 +38,10 @@ namespace M16Chat_Windows
             }
         }
 
-        private void AddListItem(String data, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
+        private BnetChattingRGB getListColor(BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
         {
-            ListBoxItem lb = new ListBoxItem();
-            lb.Content = data;
-            MainChatList.Items.Add(lb);
-            MainChatList.SelectedIndex = MainChatList.Items.Count - 1;
-            MainChatList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
-
             BnetChattingRGB colorSet = new BnetChattingRGB();
-            BnetChattingRGB borderSet = new BnetChattingRGB();
-
-            switch(bnetChattingColor)
+            switch (bnetChattingColor)
             {
                 case BnetChattingColor.Error:
                     colorSet.r = 255;
@@ -81,6 +74,39 @@ namespace M16Chat_Windows
                     colorSet.b = 255;
                     break;
             }
+            return colorSet;
+        }
+
+        private void AddListItem(String data, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
+        {
+            ListBoxItem lb = new ListBoxItem();
+            lb.Content = data;
+            MainChatList.Items.Add(lb);
+            MainChatList.SelectedIndex = MainChatList.Items.Count - 1;
+            MainChatList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
+
+            BnetChattingRGB colorSet = this.getListColor(bnetChattingColor);
+            BnetChattingRGB borderSet = new BnetChattingRGB();
+           
+            borderSet.r = (byte)Math.Max(0, colorSet.r - 32);
+            borderSet.g = (byte)Math.Max(0, colorSet.g - 32);
+            borderSet.b = (byte)Math.Max(0, colorSet.b - 32);
+            lb.Background = new SolidColorBrush(Color.FromRgb(colorSet.r, colorSet.g, colorSet.b));
+            lb.BorderBrush = new SolidColorBrush(Color.FromRgb(borderSet.r, borderSet.g, borderSet.b));
+            lb.BorderThickness = new Thickness(1, 1, 1, 1);
+        }
+
+        private void AddListFriend(String name, String clan, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
+        {
+            ListBoxItem lb = new ListBoxItem();
+            lb.Content = name + ((clan != "") ? " [" + clan + "]" : "");
+            FriendsList.Items.Add(lb);
+            FriendsList.SelectedIndex = FriendsList.Items.Count - 1;
+            FriendsList.ScrollIntoView(FriendsList.Items[FriendsList.Items.Count - 1]);
+
+            BnetChattingRGB colorSet = this.getListColor(bnetChattingColor);
+            BnetChattingRGB borderSet = new BnetChattingRGB();
+
             borderSet.r = (byte)Math.Max(0, colorSet.r - 32);
             borderSet.g = (byte)Math.Max(0, colorSet.g - 32);
             borderSet.b = (byte)Math.Max(0, colorSet.b - 32);
@@ -149,6 +175,25 @@ namespace M16Chat_Windows
             }));
         }
 
+        private void OnChatFriendsUpdateHandler(BnetFriends[] bnetFriends)
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
+                FriendsList.Items.Clear();
+                BnetChattingColor bnetChattingColor = new BnetChattingColor();
+                for (int i=0; i<bnetFriends.Length; i++)
+                {
+                    if(bnetFriends[i].name == bClient.bnetUserUid)
+                    {
+                        bnetChattingColor = BnetChattingColor.Me;
+                    } else
+                    {
+                        bnetChattingColor = BnetChattingColor.Plain;
+                    }
+                    this.AddListFriend(bnetFriends[i].name, bnetFriends[i].locationName, bnetChattingColor);
+                }
+            }));
+        }
+
         private void Initializing(object sender, RoutedEventArgs e)
         {
             BnetClient.OnChatUser += new BnetClient.OnChatUserDelegate(OnChatUserHandler);
@@ -158,6 +203,7 @@ namespace M16Chat_Windows
             BnetClient.OnChatWhisper += new BnetClient.OnChatWhisperDelegate(OnChatWhisperHandler);
             BnetClient.OnChatLogined += new BnetClient.OnChatLoginedDelegate(OnChatLoginHandler);
             BnetClient.OnChatSockError += new BnetClient.OnChatSockErrorDelegate(OnChatSockError);
+            BnetClient.OnChatFriendsUpdate += new BnetClient.OnChatFriendsUpdateDelegate(OnChatFriendsUpdateHandler);
             this.ShowLoginDialog(sender, e);
         }
 

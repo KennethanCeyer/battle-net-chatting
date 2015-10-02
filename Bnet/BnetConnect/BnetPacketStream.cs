@@ -8,6 +8,20 @@ namespace Bnet.BnetConnect
 {
     public class BnetPacketStream
     {
+        public uint getIndexFromBytes(byte[] data, uint pos = 0)
+        {
+            List<byte> current = new List<byte>();
+            uint i;
+            for (i = pos; i < data.Length; i++)
+            {
+                if (data[i] == 0x00)
+                {
+                    break;
+                }
+            }
+            return i;
+        }
+
         public int readWord(byte[] data, uint pos)
         {
             int o1, o2;

@@ -51,14 +51,14 @@ namespace Bnet.BnetConnect
 
         public void setBnetByte(String strData, bool isVariable = false)
         {
-            String hexData = bnetHelper.Acsii2Hex(strData);
             if (isVariable)
             {
-                byte[] bData = bnetHelper.Hex2Byte(hexData);
+                byte[] bData = Encoding.UTF8.GetBytes(strData);
                 this.setBnetByte(bData);
                 this.setBnetByte((byte) 0x00);
             }
             else {
+                String hexData = bnetHelper.Acsii2Hex(strData);
                 Int32 intData = Int32.Parse(hexData, System.Globalization.NumberStyles.AllowHexSpecifier);
                 this.setBnetByte(intData, isVariable);
             }

@@ -20,6 +20,14 @@
 - It's makes C sharp with MahApps frameworks.
 - You need Visual Studio 2015 higher version, If you contribute this project.
 
+### Related
+
+- This is for Windows.
+- You can use for android app, If you use that one.
+- [The Gitbut of M16-Chat-For-Android](https://github.com/KennethanCeyer/m16chat-android)
+
+----
+
 ### Release Notes.
 
 #### Version 0.0.2

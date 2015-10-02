@@ -27,7 +27,7 @@
 - You can use for android app, If you use that one.
 - [Github M16-Chat-For-Android](https://github.com/KennethanCeyer/m16chat-android)
 
-### Install
+### Installation
 
 - Check The [Release](https://github.com/KennethanCeyer/M16-Chatting-For-Windows/releases/)
 - [Download latest version](https://github.com/KennethanCeyer/M16-Chatting-For-Windows/releases/download/v0.0.2/M16_Talk_setupx86.exe)

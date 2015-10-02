@@ -30,7 +30,7 @@
 ### Install
 
 - Check The [Release](https://github.com/KennethanCeyer/M16-Chatting-For-Windows/releases/)
-- [Download latest version](/KennethanCeyer/M16-Chatting-For-Windows/releases/download/v0.0.2/M16_Talk_setupx86.exe)
+- [Download latest version](https://github.com/KennethanCeyer/M16-Chatting-For-Windows/releases/download/v0.0.2/M16_Talk_setupx86.exe)
 
 ----
 

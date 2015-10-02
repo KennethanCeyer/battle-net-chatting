@@ -24,7 +24,7 @@
 
 - This is for Windows.
 - You can use for android app, If you use that one.
-- [The Gitbut of M16-Chat-For-Android](https://github.com/KennethanCeyer/m16chat-android)
+- [Github M16-Chat-For-Android](https://github.com/KennethanCeyer/m16chat-android)
 
 ----
 

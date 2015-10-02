@@ -14,7 +14,7 @@
 - Optimized on `M16 Server`
 - Followed of [Bnet docs](https://bnetdocs.org/?op=doc&did=16)
 
-### Contributes
+### Contribution
 
 - Welcome your contribute when this project be approached the alpha version.
 - It's makes C sharp with MahApps frameworks.

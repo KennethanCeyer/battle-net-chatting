@@ -32,6 +32,11 @@ namespace M16Chat_Windows
             }
         }
 
+        private void AddListItem(String data)
+        {
+            MainChatList.Items.Add(data);
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -42,14 +47,14 @@ namespace M16Chat_Windows
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
                 MainSpinner.IsActive = false;
-                MainChatBox.Text += user + "님이 입장하셨습니다.\r\n";
+                this.AddListItem(user + "님이 입장하셨습니다.");
             }));
         }
 
         private void OnChatUserHandler(String user, String message)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
-                MainChatBox.Text += user + ": " + message + "\r\n";
+                this.AddListItem(user + ": " + message);
             }));
         }
 
@@ -67,7 +72,7 @@ namespace M16Chat_Windows
             {
                 bClient.setChatMessage(input);
                 this.MainChatInput.Text = "";
-                this.MainChatBox.Text += bClient.bnetUserUid + ": " + input + "\r\n";
+                this.AddListItem(bClient.bnetUserUid + ": " + input);
             }
         }
 

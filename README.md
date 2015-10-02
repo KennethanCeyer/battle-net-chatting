@@ -12,7 +12,7 @@
 - Licenced MIT
 - Developed by `PIGNOSE`
 - Optimized on `M16 Server`
-- Followed of [Bnet docs](https://bnetdocs.org/?op=doc&did=16)
+- It has followed of [Bnet docs](https://bnetdocs.org/?op=doc&did=16)
 
 ### Contribution
 

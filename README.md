@@ -2,6 +2,11 @@
 
 > Warcraft III Battlenet chatting for windows!
 
+![Sample](http://www.nhpcw.com/upload/2015-10-02%2B%25EC%2598%25A4%25ED%259B%2584%2B3-52-28_100215035309.jpg)
+
+- Enjoy your war3 chatting on windows.
+- It's so quick and fast!.
+
 ### M16 Chatting For Windows is
 
 - Licenced MIT

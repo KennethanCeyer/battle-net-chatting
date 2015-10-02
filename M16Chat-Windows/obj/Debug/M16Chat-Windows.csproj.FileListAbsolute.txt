@@ -24,3 +24,5 @@ C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\M16Cha
 C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\M16Chat-Windows.pdb
 C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\bin\Debug\Bnet.dll
 C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\bin\Debug\Bnet.pdb
+C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\bin\Debug\M16Chat-Windows.exe.CodeAnalysisLog.xml
+C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\bin\Debug\M16Chat-Windows.exe.lastcodeanalysissucceeded

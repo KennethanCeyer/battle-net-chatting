@@ -117,7 +117,14 @@ namespace M16Chat_Windows
 
         public MainWindow()
         {
-            InitializeComponent();
+            try {
+                InitializeComponent();
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.StackTrace);
+                Debug.WriteLine(e.StackTrace);
+            }
         }
 
         private void OnChatLoginHandler(String user)

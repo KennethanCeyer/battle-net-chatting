@@ -10,8 +10,17 @@ using Bnet.BnetConnect;
 
 namespace Bnet
 {
-    // This project can output the Class library as a NuGet Package.
-    // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
+    /**
+     *
+     * [ Battlet Client v 1.0 ]
+     *
+     * @ Author         PIGNOSE
+     * @ Last Updated   2015. 10. 02
+     * @ Version        0.0.2
+     * @ BuildTool      Visual Studio 2015 - .Net Framework 4.5
+     * @ GitHub         https://github.com/KennethanCeyer/M16-Chatting-For-Windows
+     *
+     **/
     public class BnetClient : BnetHandler
     {
         public ManualResetEvent connectDone = new ManualResetEvent(false);

@@ -4,14 +4,19 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         Title="M16 채팅" 
         EnableDWMDropShadow="True"
+        ShowMinButton="True"
+        ShowMaxRestoreButton="True"
         WindowTransitionsEnabled="False"
         WindowStartupLocation="CenterScreen"
         Icon="./Resources/Icon.ico"
-        ResizeMode="NoResize"
+        ResizeMode="CanResizeWithGrip"
         BorderBrush="{DynamicResource AccentColorBrush}"
         BorderThickness="1"
         Height="600"
-        Width="400" Loaded="Initializing">
+        Width="400"
+        MinWidth="300"
+        MinHeight="360"
+        Loaded="Initializing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>

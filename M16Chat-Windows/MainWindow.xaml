@@ -28,7 +28,7 @@
                         <ColumnDefinition Width="80" />
                     </Grid.ColumnDefinitions>
                     <Border BorderBrush="#D8D8D8" BorderThickness="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0">
-                        <ListBox x:Name="MainChatList" Grid.Column="0" Grid.Row="0"></ListBox>
+                        <ListBox x:Name="MainChatList" Grid.Column="0" Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"></ListBox>
                     </Border>
                     <TextBox x:Name="MainChatInput" Grid.Column="0" Grid.Row="1" KeyDown="OnInputPress" BorderBrush="#D8D8D8" FontFamily="Malgun Gothic" />
                     <Button Grid.Column="1" Grid.Row="1" Content="보내기" Click="OnChatSend" FontFamily="Malgun Gothic" FontSize="12" FontWeight="Normal"></Button>
@@ -40,6 +40,6 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Controls:ProgressRing x:Name="MainSpinner" IsActive="False" />
+        <Controls:ProgressRing x:Name="MainSpinner" IsActive="False" FontSize="13.333" />
     </Grid>
 </Controls:MetroWindow>

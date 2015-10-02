@@ -19,9 +19,17 @@ namespace Bnet
 
         public delegate void OnChatLoginedDelegate(String user);
         public delegate void OnChatUserDelegate(String user, String message);
+        public delegate void OnChatErrorDelegate(String user, String message);
+        public delegate void OnChatInfoDelegate(String user, String message);
+        public delegate void OnChatWhisperDelegate(String user, String message);
+        public delegate void OnChatSockErrorDelegate();
 
         public static event OnChatLoginedDelegate OnChatLogined;
         public static event OnChatUserDelegate OnChatUser;
+        public static event OnChatErrorDelegate OnChatError;
+        public static event OnChatInfoDelegate OnChatInfo;
+        public static event OnChatWhisperDelegate OnChatWhisper;
+        public static event OnChatSockErrorDelegate OnChatSockError;
 
         private static Dictionary<String, String> bnetConInfo;
         private Socket bnetSock;
@@ -67,17 +75,17 @@ namespace Bnet
         {
             string[] Song =
             {
-                "안녕하세요 M16 IB채널 봇입니다.",
-                "이곳은 Impossible Bossies 클랜 채널입니다.",
-                "불가능한 보스잡기 게임을 주관하는 클랜입니다~",
-                "있다 저녁에 한 겜할분, 대기하시길"
+                "쭈형이",
+                "언제 올거야",
+                "서울로",
+                "심심"
             };
             uint i = 0;
             while (true)
             {
                 bnetProtocol.setBnetByte(Song[i], true);
                 bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_CHATCOMMAND);
-                Thread.Sleep(15000);
+                Thread.Sleep(2000);
                 i = (uint) ((i + 1) % Song.Length);
             }
         }
@@ -87,6 +95,11 @@ namespace Bnet
             receiveDone.WaitOne();
             bnetProtocol.setBnetByte(message, true);
             bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_CHATCOMMAND);
+        }
+
+        public static void OnConnectError()
+        {
+            OnChatSockError();
         }
 
         public void OnConnectCallback(IAsyncResult IAR)
@@ -246,13 +259,14 @@ namespace Bnet
                                 this.getHandleMsg(Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray()));
                                 this.bnetUserUid = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                 OnChatLogined(this.bnetUserUid);
-                                Thread musicBotThread = new Thread(new ThreadStart(MusicBot));
-                                musicBotThread.Start();
+                                //Thread musicBotThread = new Thread(new ThreadStart(MusicBot));
+                                //musicBotThread.Start();
                                 break;
                             case BnetPacketModel.SID_CHATEVENT:
                                 BnetPacketEvent bnetPacketEvent = (BnetPacketEvent)BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 0);
                                 uint flags = BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 4);
                                 uint ping = BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 8);
+                                String message;
                                 string user = bnetPackSt.getData(bnetPackSt.pack_data.ToArray(), 24);
                                 this.getHandleMsg(bnetPacketEvent.ToString());
                                 this.getHandleMsg(flags.ToString());
@@ -265,14 +279,25 @@ namespace Bnet
                                     case BnetPacketEvent.EID_SHOWUSER:
                                         break;
                                     case BnetPacketEvent.EID_ERROR:
+                                        message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                        this.getHandleMsg(message);
+                                        OnChatError(user, message);
+                                        break;
                                     case BnetPacketEvent.EID_INFO:
+                                        message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                        this.getHandleMsg(message);
+                                        OnChatInfo(user, message);
                                         break;
                                     case BnetPacketEvent.EID_BROADCAST:
                                         break;
                                     case BnetPacketEvent.EID_WHISPER:
                                     case BnetPacketEvent.EID_WHISPERSENT:
+                                        message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                        this.getHandleMsg(message);
+                                        OnChatWhisper(user, message);
+                                        break;
                                     case BnetPacketEvent.EID_TALK:
-                                        String message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                        message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                         this.getHandleMsg(message);
                                         OnChatUser(user, message);
                                         break;

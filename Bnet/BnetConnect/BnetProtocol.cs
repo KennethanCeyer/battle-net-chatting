@@ -76,7 +76,7 @@ namespace Bnet.BnetConnect
             }
             catch (SocketException e)
             {
-                throw e;  // any serious error occurr
+                BnetClient.OnConnectError();
             }
             bnetData.Clear();
         }

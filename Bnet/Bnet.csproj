@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BnetClient.cs" />
+    <Compile Include="BnetConnect\BnetDataStruct.cs" />
     <Compile Include="BnetConnect\BnetHandler.cs" />
     <Compile Include="BnetConnect\BnetHelper.cs" />
     <Compile Include="BnetConnect\BnetPacketModel.cs" />

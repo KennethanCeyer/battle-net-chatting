@@ -135,6 +135,13 @@ namespace M16Chat_Windows
             }));
         }
 
+        private void OnChatJoinHandler(String user)
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
+                this.AddListItem("[알림]: " + user + "님이 입장하셨습니다.", BnetChattingColor.Info);
+            }));
+        }
+
         private void OnChatWhisperHandler(String user, String message)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
@@ -147,6 +154,7 @@ namespace M16Chat_Windows
             BnetClient.OnChatUser += new BnetClient.OnChatUserDelegate(OnChatUserHandler);
             BnetClient.OnChatError += new BnetClient.OnChatErrorDelegate(OnChatErrorHandler);
             BnetClient.OnChatInfo += new BnetClient.OnChatInfoDelegate(OnChatInfoHandler);
+            BnetClient.OnChatJoin += new BnetClient.OnChatJoinDelegate(OnChatJoinHandler);
             BnetClient.OnChatWhisper += new BnetClient.OnChatWhisperDelegate(OnChatWhisperHandler);
             BnetClient.OnChatLogined += new BnetClient.OnChatLoginedDelegate(OnChatLoginHandler);
             BnetClient.OnChatSockError += new BnetClient.OnChatSockErrorDelegate(OnChatSockError);

@@ -26,5 +26,10 @@ namespace Bnet.BnetConnect
             }
             return Encoding.UTF8.GetString(part);
         }
+
+        public uint getSeek()
+        {
+            return cursor + 1;
+        }
     }
 }

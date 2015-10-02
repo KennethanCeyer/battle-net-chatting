@@ -27,7 +27,8 @@ namespace Bnet.BnetConnect
             LOGONRESP_FaildID,
             LOGONRESP_FaildPW,
             LOGONRESP_LockedID,
-            ENTERCHAT
+            ENTERCHAT,
+            Search_FriendList
         };
 
         private String[] BnetMsg =
@@ -45,7 +46,8 @@ namespace Bnet.BnetConnect
             "LOGONRESP2 프로세스: 연결실패_아이디문제.",
             "LOGONRESP2 프로세스: 연결실패_패스워드문제.",
             "LOGONRESP2 프로세스: 연결실패_아이디락.",
-            "ENTERCHAT 프로세스: 채팅방 진입 허가."
+            "ENTERCHAT 프로세스: 채팅방 진입 허가.",
+            "FRIEND_LIST 탐색 중."
         };
 
         public BnetHandler()

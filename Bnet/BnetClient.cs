@@ -21,6 +21,7 @@ namespace Bnet
         public delegate void OnChatUserDelegate(String user, String message);
         public delegate void OnChatErrorDelegate(String user, String message);
         public delegate void OnChatInfoDelegate(String user, String message);
+        public delegate void OnChatJoinDelegate(String user);
         public delegate void OnChatWhisperDelegate(String user, String message);
         public delegate void OnChatSockErrorDelegate();
 
@@ -28,6 +29,7 @@ namespace Bnet
         public static event OnChatUserDelegate OnChatUser;
         public static event OnChatErrorDelegate OnChatError;
         public static event OnChatInfoDelegate OnChatInfo;
+        public static event OnChatJoinDelegate OnChatJoin;
         public static event OnChatWhisperDelegate OnChatWhisper;
         public static event OnChatSockErrorDelegate OnChatSockError;
 
@@ -255,6 +257,7 @@ namespace Bnet
                                 this.getHandleMsg(BnetCode.ENTERCHAT);
                                 bnetProtocol.setBnetByte(0x01);
                                 bnetProtocol.setBnetByte("ib", true);
+                                bnetProtocol.send(recvSock, BnetPacketModel.SID_FRIENDSLIST);
                                 bnetProtocol.send(recvSock, BnetPacketModel.SID_JOINCHANNEL);
                                 this.getHandleMsg(Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray()));
                                 this.bnetUserUid = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
@@ -302,6 +305,10 @@ namespace Bnet
                                         OnChatUser(user, message);
                                         break;
                                     case BnetPacketEvent.EID_JOIN:
+                                        message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                        this.getHandleMsg("Join: " + user + " : " + message);
+                                        OnChatJoin(user);
+                                        break;
                                         break;
                                     case BnetPacketEvent.EID_LEAVE:
                                         break;
@@ -312,6 +319,22 @@ namespace Bnet
                                         bnetProtocol.setBnetByte(0x00000000);
                                         bnetProtocol.send(recvSock, BnetPacketModel.SID_CHECKAD);
                                         break;
+                                }
+                                break;
+                            case BnetPacketModel.SID_FRIENDSLIST:
+                                uint seek = 0;
+                                byte cnt = bnetPackSt.pack_data[(int)seek++];
+                                BnetFriends[] bnetFriends = new BnetFriends[(int)cnt];
+                                this.getHandleMsg(BnetCode.Search_FriendList);
+                                this.getHandleMsg("탐색 된 프랜즈 " + cnt.ToString() + " 명");
+                                for (int i = 0; i < cnt; i++)
+                                {
+                                    bnetFriends[i].name = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                    seek = bnetPackSt.getSeek();
+                                    bnetFriends[i].status = bnetPackSt.pack_data[(int)seek++];
+                                    bnetFriends[i].location = bnetPackSt.pack_data[(int)seek++];
+                                    bnetFriends[i].product = BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), (int)seek);
+                                    bnetFriends[i].locationName = bnetPackSt.getData(bnetPackSt.pack_data.ToArray(), seek + 4);
                                 }
                                 break;
                         }

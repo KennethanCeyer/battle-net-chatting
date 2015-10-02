@@ -18,7 +18,7 @@
 ### Contribution
 
 - Welcome your a contribution!
-- It's makes C sharp with MahApps frameworks.
+- It makes C sharp with MahApps frameworks.
 - You need Visual Studio 2015 higher version, If you contribute this project.
 
 ### Related

@@ -102,10 +102,13 @@ namespace M16Chat_Windows
         private void AddListFriend(String name, String clan, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
         {
             ListBoxItem lb = new ListBoxItem();
-            lb.Content = name + ((clan != "") ? " [" + clan + "]" : "");
-            FriendsList.Items.Add(lb);
-            FriendsList.SelectedIndex = FriendsList.Items.Count - 1;
-            FriendsList.ScrollIntoView(FriendsList.Items[FriendsList.Items.Count - 1]);
+            TextBlock tb = new TextBlock();
+            tb.TextWrapping = TextWrapping.Wrap;
+            tb.Text = name + ((clan != "") ? " [" + clan + "]" : "");
+            lb.Content = tb;
+            MainChatList.Items.Add(lb);
+            MainChatList.SelectedIndex = MainChatList.Items.Count - 1;
+            MainChatList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
 
             BnetChattingRGB colorSet = this.getListColor(bnetChattingColor);
             BnetChattingRGB borderSet = new BnetChattingRGB();

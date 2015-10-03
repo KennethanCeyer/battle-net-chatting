@@ -15,7 +15,7 @@ namespace M16Chat_Windows
     /// <summary>
     /// MainWindow.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class MainWindow
+    public partial class ChatWindow
     {
         private static String bServerIP = "m16-chat.ggu.la";
         private static String bServerPort = "6112";
@@ -80,17 +80,14 @@ namespace M16Chat_Windows
         private void AddListItem(String data, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
         {
             ListBoxItem lb = new ListBoxItem();
-            TextBlock tb = new TextBlock();
-            tb.TextWrapping = TextWrapping.Wrap;
-            tb.Text = data;
-            lb.Content = tb;
+            lb.Content = data;
             MainChatList.Items.Add(lb);
             MainChatList.SelectedIndex = MainChatList.Items.Count - 1;
             MainChatList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
 
             BnetChattingRGB colorSet = this.getListColor(bnetChattingColor);
             BnetChattingRGB borderSet = new BnetChattingRGB();
-           
+
             borderSet.r = (byte)Math.Max(0, colorSet.r - 32);
             borderSet.g = (byte)Math.Max(0, colorSet.g - 32);
             borderSet.b = (byte)Math.Max(0, colorSet.b - 32);
@@ -118,12 +115,13 @@ namespace M16Chat_Windows
             lb.BorderThickness = new Thickness(1, 1, 1, 1);
         }
 
-        public MainWindow()
+        public ChatWindow()
         {
-            try {
+            try
+            {
                 InitializeComponent();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.StackTrace);
                 Debug.WriteLine(e.StackTrace);
@@ -190,12 +188,13 @@ namespace M16Chat_Windows
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
                 FriendsList.Items.Clear();
                 BnetChattingColor bnetChattingColor = new BnetChattingColor();
-                for (int i=0; i<bnetFriends.Length; i++)
+                for (int i = 0; i < bnetFriends.Length; i++)
                 {
-                    if(bnetFriends[i].name == bClient.bnetUserUid)
+                    if (bnetFriends[i].name == bClient.bnetUserUid)
                     {
                         bnetChattingColor = BnetChattingColor.Me;
-                    } else
+                    }
+                    else
                     {
                         bnetChattingColor = BnetChattingColor.Plain;
                     }
@@ -220,7 +219,7 @@ namespace M16Chat_Windows
         private void OnChatSend(object sender, RoutedEventArgs e)
         {
             String input = this.MainChatInput.Text;
-            if(input != "")
+            if (input != "")
             {
                 bClient.setChatMessage(input);
                 this.MainChatInput.Text = "";
@@ -233,7 +232,7 @@ namespace M16Chat_Windows
 
         private void OnInputPress(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 e.Handled = true;
                 OnChatSend(sender, e);

@@ -99,8 +99,7 @@ namespace M16Chat_Windows
         private void AddListItem(BnetUsername data, String message, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
         {
             ListBoxItem lb = new ListBoxItem();
-            StackPanel sp = new StackPanel();
-            sp.Orientation = Orientation.Horizontal;
+            DockPanel dp = new DockPanel();
             TextBlock user = new TextBlock();
             user.Text = data.name;
             if(data.color != null)
@@ -132,7 +131,7 @@ namespace M16Chat_Windows
                     user.Margin = userMargin;
                     user.Text += ":";
                 }
-                sp.Children.Add(status);
+                dp.Children.Add(status);
             } else
             {
                 Thickness userMargin = user.Margin;
@@ -140,9 +139,9 @@ namespace M16Chat_Windows
                 user.Margin = userMargin;
                 user.Text += ":";
             }
-            sp.Children.Add(user);
-            sp.Children.Add(tb);
-            lb.Content = sp;
+            dp.Children.Add(user);
+            dp.Children.Add(tb);
+            lb.Content = dp;
             MainChatList.Items.Add(lb);
             MainChatList.SelectedIndex = MainChatList.Items.Count - 1;
             MainChatList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
@@ -161,8 +160,7 @@ namespace M16Chat_Windows
         private void AddListItem(String message, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
         {
             ListBoxItem lb = new ListBoxItem();
-            StackPanel sp = new StackPanel();
-            sp.Orientation = Orientation.Horizontal;
+            DockPanel dp = new DockPanel();
             TextBlock tb = new TextBlock();
             tb.TextWrapping = TextWrapping.Wrap;
             tb.Text = message;
@@ -184,10 +182,10 @@ namespace M16Chat_Windows
                 {
                     status.Text = "[귓속말]";
                 }
-                sp.Children.Add(status);
+                dp.Children.Add(status);
             }
-            sp.Children.Add(tb);
-            lb.Content = sp;
+            dp.Children.Add(tb);
+            lb.Content = dp;
             MainChatList.Items.Add(lb);
             MainChatList.SelectedIndex = MainChatList.Items.Count - 1;
             MainChatList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
@@ -208,11 +206,11 @@ namespace M16Chat_Windows
             ListBoxItem lb = new ListBoxItem();
             TextBlock tb = new TextBlock();
             tb.TextWrapping = TextWrapping.Wrap;
-            tb.Text = name + ((clan != "") ? " [" + clan + "]" : "");
+            tb.Text = name.name + ((clan != "") ? " [" + clan + "]" : "");
             lb.Content = tb;
-            MainChatList.Items.Add(lb);
-            MainChatList.SelectedIndex = MainChatList.Items.Count - 1;
-            MainChatList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
+            FriendsList.Items.Add(lb);
+            FriendsList.SelectedIndex = MainChatList.Items.Count - 1;
+            FriendsList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
 
             BnetChattingRGB colorSet = this.getListColor(bnetChattingColor);
             BnetChattingRGB borderSet = new BnetChattingRGB();

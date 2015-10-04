@@ -12,10 +12,10 @@ namespace Bnet
 {
     /**
      *
-     * [ Battlet Client v 1.0 ]
+     * [ Battlet Client v 1.1 ]
      *
      * @ Author         PIGNOSE
-     * @ Last Updated   2015. 10. 02
+     * @ Last Updated   2015. 10. 05
      * @ Version        0.0.2
      * @ BuildTool      Visual Studio 2015 - .Net Framework 4.5
      * @ GitHub         https://github.com/KennethanCeyer/M16-Chatting-For-Windows
@@ -36,6 +36,7 @@ namespace Bnet
         public delegate void OnChatSockErrorDelegate();
         public delegate void OnChatFriendsUpdateDelegate(BnetFriends[] bnetFriends);
         public delegate void OnChatUserChannelMoveDelegate(BnetUsername user, String channel);
+        public delegate void OnChatUserLoginFaildDelegate(BnetCode bnetCode);
 
         public static event OnChatLoginedDelegate OnChatLogined;
         public static event OnChatUserDelegate OnChatUser;
@@ -47,6 +48,7 @@ namespace Bnet
         public static event OnChatSockErrorDelegate OnChatSockError;
         public static event OnChatFriendsUpdateDelegate OnChatFriendsUpdate;
         public static event OnChatUserChannelMoveDelegate OnChatUserChannelMove;
+        public static event OnChatUserLoginFaildDelegate OnChatUserLoginFaild;
 
         private const string firstJoinChannel = "ib";
         private static Dictionary<String, String> bnetConInfo;
@@ -281,15 +283,19 @@ namespace Bnet
                                         break;
                                     case 0x01:
                                         this.getHandleMsg(BnetCode.LOGONRESP_FaildID);
+                                        OnChatUserLoginFaild(BnetCode.LOGONRESP_FaildID);
                                         break;
                                     case 0x02:
                                         this.getHandleMsg(BnetCode.LOGONRESP_FaildPW);
+                                        OnChatUserLoginFaild(BnetCode.LOGONRESP_FaildPW);
                                         break;
                                     case 0x06:
                                         this.getHandleMsg(BnetCode.LOGONRESP_LockedID);
+                                        OnChatUserLoginFaild(BnetCode.LOGONRESP_LockedID);
                                         break;
                                     default:
                                         this.getHandleMsg(BnetCode.UnkownError);
+                                        OnChatUserLoginFaild(BnetCode.UnkownError);
                                         break;
                                 }
                                 break;

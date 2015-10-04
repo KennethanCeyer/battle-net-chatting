@@ -28,8 +28,9 @@ namespace M16Chat_Windows
             String title = "M16 계정의 아이디와 비밀번호를 입력해주세요.";
             if(IsRetry == true)
             {
-                title = "M16 계정의 아이디와 비밀번호가 일치하지 않습니다.\r\n다시 확인해보시고 입력해주세요.";
+                title = "아이디 혹은 비밀번호가 일치하지 않습니다.\r\n다시 확인해보시고 입력해주세요.";
             }
+            MainSpinner.IsActive = false;
             LoginDialogData result = await this.ShowLoginAsync("로그인", title, new LoginDialogSettings {
                 ColorScheme = this.MetroDialogOptions.ColorScheme,
                 AnimateShow = true,
@@ -344,6 +345,15 @@ namespace M16Chat_Windows
             }));
         }
 
+        private void OnChatUserLoginFaildHandler(BnetHandler.BnetCode bnetCode)
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                this.AddListItem("아이디 혹은 비밀번호가 일치하지 않습니다.", BnetChattingColor.Error);
+                this.ShowLoginDialog(true);
+            }));
+        }
+
         private void Initializing(object sender, RoutedEventArgs e)
         {
             BnetClient.OnChatUser += new BnetClient.OnChatUserDelegate(OnChatUserHandler);
@@ -356,6 +366,7 @@ namespace M16Chat_Windows
             BnetClient.OnChatSockError += new BnetClient.OnChatSockErrorDelegate(OnChatSockError);
             BnetClient.OnChatFriendsUpdate += new BnetClient.OnChatFriendsUpdateDelegate(OnChatFriendsUpdateHandler);
             BnetClient.OnChatUserChannelMove += new BnetClient.OnChatUserChannelMoveDelegate(OnChatUserChannelMoveHandler);
+            BnetClient.OnChatUserLoginFaild += new BnetClient.OnChatUserLoginFaildDelegate(OnChatUserLoginFaildHandler);
             this.ShowLoginDialog();
         }
 

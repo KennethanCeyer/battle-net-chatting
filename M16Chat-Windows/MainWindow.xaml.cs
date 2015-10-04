@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using M16Chat_Windows.BnetChatting;
 using Bnet.BnetConnect;
+using System.Threading;
 
 namespace M16Chat_Windows
 {
@@ -22,17 +23,33 @@ namespace M16Chat_Windows
         private static BnetUsername bnetUsername;
         private BnetClient bClient = new BnetClient(bServerIP, bServerPort);
 
-        private async void ShowLoginDialog(object sender, RoutedEventArgs e)
+        private async void ShowLoginDialog(bool IsRetry = false)
         {
-            LoginDialogData result = await this.ShowLoginAsync("로그인", "M16 계정의 아이디와 비밀번호를 입력해주세요.", new LoginDialogSettings { ColorScheme = this.MetroDialogOptions.ColorScheme, AnimateShow = true });
-            if (result == null || (result.Username == null || result.Password == null))
+            String title = "M16 계정의 아이디와 비밀번호를 입력해주세요.";
+            if(IsRetry == true)
             {
-                this.ShowLoginDialog(sender, e);
+                title = "M16 계정의 아이디와 비밀번호가 일치하지 않습니다.\r\n다시 확인해보시고 입력해주세요.";
+            }
+            LoginDialogData result = await this.ShowLoginAsync("로그인", title, new LoginDialogSettings {
+                ColorScheme = this.MetroDialogOptions.ColorScheme,
+                AnimateShow = true,
+                NegativeButtonVisibility = Visibility.Visible,
+                UsernameWatermark = "배틀넷 아이디",
+                PasswordWatermark = "배틀넷 비밀번호",
+                AffirmativeButtonText = "로그인",
+                NegativeButtonText = "종료"
+            });
+            if (result == null)
+            {
+                this.Close();
+            }
+            else if(result.Username == null || result.Password == null)
+            {
+                this.ShowLoginDialog(true);
             }
             else
             {
                 MainSpinner.IsActive = true;
-                //MessageDialogResult messageResult = await this.ShowMessageAsync("Authentication Information", String.Format("Username: {0}\nPassword: {1}", result.Username, result.Password));
                 this.MainChatInput.IsEnabled = false;
                 this.AddListItem("M16 서버와 연결중입니다.", BnetChattingColor.Info);
                 this.bClient.Connect(result.Username, result.Password);
@@ -253,6 +270,8 @@ namespace M16Chat_Windows
             {
                 this.AddListItem("M16 서버와의 연결이 종료되었습니다.", BnetChattingColor.Error);
                 MainChatInput.IsEnabled = false;
+                Thread.Sleep(1500);
+                this.ShowLoginDialog();
             }));
         }
 
@@ -337,7 +356,7 @@ namespace M16Chat_Windows
             BnetClient.OnChatSockError += new BnetClient.OnChatSockErrorDelegate(OnChatSockError);
             BnetClient.OnChatFriendsUpdate += new BnetClient.OnChatFriendsUpdateDelegate(OnChatFriendsUpdateHandler);
             BnetClient.OnChatUserChannelMove += new BnetClient.OnChatUserChannelMoveDelegate(OnChatUserChannelMoveHandler);
-            this.ShowLoginDialog(sender, e);
+            this.ShowLoginDialog();
         }
 
         private void OnChatSend(object sender, RoutedEventArgs e)

@@ -19,7 +19,7 @@ namespace M16Chat_Windows
     {
         private static String bServerIP = "m16-chat.ggu.la";
         private static String bServerPort = "6112";
-        private static String bnetUsername;
+        private static BnetUsername bnetUsername;
         private BnetClient bClient = new BnetClient(bServerIP, bServerPort);
 
         private async void ShowLoginDialog(object sender, RoutedEventArgs e)
@@ -50,8 +50,8 @@ namespace M16Chat_Windows
                     colorSet.b = 200;
                     break;
                 case BnetChattingColor.Info:
-                    colorSet.r = 200;
-                    colorSet.g = 230;
+                    colorSet.r = 230;
+                    colorSet.g = 242;
                     colorSet.b = 255;
                     break;
                 case BnetChattingColor.Tip:
@@ -70,28 +70,86 @@ namespace M16Chat_Windows
                     colorSet.b = 224;
                     break;
                 default:
-                    colorSet.r = 248;
-                    colorSet.g = 248;
+                    colorSet.r = 250;
+                    colorSet.g = 250;
                     colorSet.b = 255;
                     break;
             }
             return colorSet;
         }
 
-        private void AddListItem(String data, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
+        private void AddListItem(BnetUsername data,  BnetChattingColor bnetChattingColor = BnetChattingColor.Plain, BnetChattingStatus bnetChattingStatus = BnetChattingStatus.Default)
+        {
+            String message = "";
+            if (bnetChattingColor == BnetChattingColor.Info || bnetChattingColor == BnetChattingColor.Error)
+            {
+                if(bnetChattingStatus == BnetChattingStatus.Join)
+                {
+                    message = "님이 입장하셨습니다.";
+                }
+                else if(bnetChattingStatus == BnetChattingStatus.Leave)
+                {
+                    message = "님이 나가셨습니다.";
+                }
+            }
+
+            this.AddListItem(data, message, bnetChattingColor);
+        }
+
+        private void AddListItem(BnetUsername data, String message, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
         {
             ListBoxItem lb = new ListBoxItem();
+            StackPanel sp = new StackPanel();
+            sp.Orientation = Orientation.Horizontal;
+            TextBlock user = new TextBlock();
+            user.Text = data.name;
+            if(data.color != null)
+            {
+                user.Foreground = (SolidColorBrush)(new BrushConverter().ConvertFrom("#" + data.color));
+            }
             TextBlock tb = new TextBlock();
             tb.TextWrapping = TextWrapping.Wrap;
-            tb.Text = data;
-            lb.Content = tb;
+            tb.Text = message;
+            if (bnetChattingColor == BnetChattingColor.Error || bnetChattingColor == BnetChattingColor.Info || bnetChattingColor == BnetChattingColor.Whisper)
+            {
+                TextBlock status = new TextBlock();
+                Thickness statusMargin = status.Margin;
+                statusMargin.Right = 6;
+                status.Margin = statusMargin;
+                if (bnetChattingColor == BnetChattingColor.Error)
+                {
+                    status.Text = "[에러]";
+                }
+                else if (bnetChattingColor == BnetChattingColor.Info)
+                {
+                    status.Text = "[정보]";
+                }
+                else if (bnetChattingColor == BnetChattingColor.Whisper)
+                {
+                    status.Text = "[귓속말]";
+                    Thickness userMargin = user.Margin;
+                    userMargin.Right = 6;
+                    user.Margin = userMargin;
+                    user.Text += ":";
+                }
+                sp.Children.Add(status);
+            } else
+            {
+                Thickness userMargin = user.Margin;
+                userMargin.Right = 6;
+                user.Margin = userMargin;
+                user.Text += ":";
+            }
+            sp.Children.Add(user);
+            sp.Children.Add(tb);
+            lb.Content = sp;
             MainChatList.Items.Add(lb);
             MainChatList.SelectedIndex = MainChatList.Items.Count - 1;
             MainChatList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
 
             BnetChattingRGB colorSet = this.getListColor(bnetChattingColor);
             BnetChattingRGB borderSet = new BnetChattingRGB();
-           
+
             borderSet.r = (byte)Math.Max(0, colorSet.r - 32);
             borderSet.g = (byte)Math.Max(0, colorSet.g - 32);
             borderSet.b = (byte)Math.Max(0, colorSet.b - 32);
@@ -100,7 +158,52 @@ namespace M16Chat_Windows
             lb.BorderThickness = new Thickness(1, 1, 1, 1);
         }
 
-        private void AddListFriend(String name, String clan, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
+        private void AddListItem(String message, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
+        {
+            ListBoxItem lb = new ListBoxItem();
+            StackPanel sp = new StackPanel();
+            sp.Orientation = Orientation.Horizontal;
+            TextBlock tb = new TextBlock();
+            tb.TextWrapping = TextWrapping.Wrap;
+            tb.Text = message;
+            if (bnetChattingColor == BnetChattingColor.Error || bnetChattingColor == BnetChattingColor.Info || bnetChattingColor == BnetChattingColor.Whisper)
+            {
+                TextBlock status = new TextBlock();
+                Thickness statusMargin = status.Margin;
+                statusMargin.Right = 6;
+                status.Margin = statusMargin;
+                if (bnetChattingColor == BnetChattingColor.Error)
+                {
+                    status.Text = "[에러]";
+                }
+                else if (bnetChattingColor == BnetChattingColor.Info)
+                {
+                    status.Text = "[정보]";
+                }
+                else if (bnetChattingColor == BnetChattingColor.Whisper)
+                {
+                    status.Text = "[귓속말]";
+                }
+                sp.Children.Add(status);
+            }
+            sp.Children.Add(tb);
+            lb.Content = sp;
+            MainChatList.Items.Add(lb);
+            MainChatList.SelectedIndex = MainChatList.Items.Count - 1;
+            MainChatList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
+
+            BnetChattingRGB colorSet = this.getListColor(bnetChattingColor);
+            BnetChattingRGB borderSet = new BnetChattingRGB();
+
+            borderSet.r = (byte)Math.Max(0, colorSet.r - 32);
+            borderSet.g = (byte)Math.Max(0, colorSet.g - 32);
+            borderSet.b = (byte)Math.Max(0, colorSet.b - 32);
+            lb.Background = new SolidColorBrush(Color.FromRgb(colorSet.r, colorSet.g, colorSet.b));
+            lb.BorderBrush = new SolidColorBrush(Color.FromRgb(borderSet.r, borderSet.g, borderSet.b));
+            lb.BorderThickness = new Thickness(1, 1, 1, 1);
+        }
+
+        private void AddListFriend(BnetUsername name, String clan, BnetChattingColor bnetChattingColor = BnetChattingColor.Plain)
         {
             ListBoxItem lb = new ListBoxItem();
             TextBlock tb = new TextBlock();
@@ -134,13 +237,13 @@ namespace M16Chat_Windows
             }
         }
 
-        private void OnChatLoginHandler(String user)
+        private void OnChatLoginHandler(BnetUsername user)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
                 MainChatInput.IsEnabled = true;
                 MainChatInput.Focus();
-                this.AddListItem(user + "님이 입장하셨습니다.", BnetChattingColor.Info);
+                this.AddListItem(user, BnetChattingColor.Info, BnetChattingStatus.Join);
                 bnetUsername = bClient.getUsername();
                 MainSpinner.IsActive = false;
             }));
@@ -155,45 +258,45 @@ namespace M16Chat_Windows
             }));
         }
 
-        private void OnChatUserHandler(String user, String message)
+        private void OnChatUserHandler(BnetUsername user, String message)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
-                this.AddListItem(user + ": " + message, BnetChattingColor.Plain);
+                this.AddListItem(user, message, BnetChattingColor.Plain);
             }));
         }
 
-        private void OnChatErrorHandler(String user, String message)
+        private void OnChatErrorHandler(BnetUsername user, String message)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
-                this.AddListItem("[경고]: " + message, BnetChattingColor.Error);
+                this.AddListItem(user, message, BnetChattingColor.Error);
             }));
         }
 
-        private void OnChatInfoHandler(String user, String message)
+        private void OnChatInfoHandler(BnetUsername user, String message)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
-                this.AddListItem("[알림]: " + message, BnetChattingColor.Info);
+                this.AddListItem(user, message, BnetChattingColor.Info);
             }));
         }
 
-        private void OnChatJoinHandler(String user)
+        private void OnChatJoinHandler(BnetUsername user)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
-                this.AddListItem("[알림]: " + user + "님이 입장하셨습니다.", BnetChattingColor.Info);
+                this.AddListItem(user, BnetChattingColor.Info, BnetChattingStatus.Join);
             }));
         }
 
-        private void OnChatLeaveHandler(String user)
+        private void OnChatLeaveHandler(BnetUsername user)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
-                this.AddListItem("[알림]: " + user + "님이 나가셨습니다.", BnetChattingColor.Info);
+                this.AddListItem(user, BnetChattingColor.Info, BnetChattingStatus.Leave);
             }));
         }
 
-        private void OnChatWhisperHandler(String user, String message)
+        private void OnChatWhisperHandler(BnetUsername user, String message)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
-                this.AddListItem(user + "[귓속말]: " + message, BnetChattingColor.Whisper);
+                this.AddListItem(user, message, BnetChattingColor.Whisper);
             }));
         }
 
@@ -204,7 +307,7 @@ namespace M16Chat_Windows
                 BnetChattingColor bnetChattingColor = new BnetChattingColor();
                 for (int i=0; i<bnetFriends.Length; i++)
                 {
-                    if(bnetFriends[i].name == bnetUsername)
+                    if(bnetFriends[i].name.name == bnetUsername.name)
                     {
                         bnetChattingColor = BnetChattingColor.Me;
                     } else
@@ -239,7 +342,7 @@ namespace M16Chat_Windows
                 this.MainChatInput.Text = "";
                 if (input[0] != '/')
                 {
-                    this.AddListItem(bnetUsername + ": " + input, BnetChattingColor.Me);
+                    this.AddListItem(bnetUsername, input, BnetChattingColor.Me);
                 }
             }
         }

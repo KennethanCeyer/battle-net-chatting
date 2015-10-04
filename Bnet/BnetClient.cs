@@ -26,13 +26,13 @@ namespace Bnet
         public ManualResetEvent connectDone = new ManualResetEvent(false);
         public ManualResetEvent receiveDone = new ManualResetEvent(false);
 
-        public delegate void OnChatLoginedDelegate(String user);
-        public delegate void OnChatUserDelegate(String user, String message);
-        public delegate void OnChatErrorDelegate(String user, String message);
-        public delegate void OnChatInfoDelegate(String user, String message);
-        public delegate void OnChatJoinDelegate(String user);
-        public delegate void OnChatLeaveDelegate(String user);
-        public delegate void OnChatWhisperDelegate(String user, String message);
+        public delegate void OnChatLoginedDelegate(BnetUsername user);
+        public delegate void OnChatUserDelegate(BnetUsername user, String message);
+        public delegate void OnChatErrorDelegate(BnetUsername user, String message);
+        public delegate void OnChatInfoDelegate(BnetUsername user, String message);
+        public delegate void OnChatJoinDelegate(BnetUsername user);
+        public delegate void OnChatLeaveDelegate(BnetUsername user);
+        public delegate void OnChatWhisperDelegate(BnetUsername user, String message);
         public delegate void OnChatSockErrorDelegate();
         public delegate void OnChatFriendsUpdateDelegate(BnetFriends[] bnetFriends);
 
@@ -52,7 +52,7 @@ namespace Bnet
         private BnetProtocol bnetProtocol = new BnetProtocol();
         private byte[] sockBuffer = new byte[1024];
         private String bnetUsrId, bnetUserPw;
-        public String bnetUserUid;
+        public BnetUsername bnetUserUid;
         public BnetHelper bnetHelper = BnetHelper.getInstance();
         public BnetPacketStream bnetPacketStream = new BnetPacketStream();
         public BnetClient(String bnetConIP, String bnetConPort)
@@ -69,7 +69,7 @@ namespace Bnet
             bnetProtocol.send(bnetSock, BnetPacketModel.SID_FRIENDSLIST);
         }
 
-        public String getUsername()
+        public BnetUsername getUsername()
         {
             return this.bnetUserUid;
         }
@@ -290,7 +290,7 @@ namespace Bnet
                             case BnetPacketModel.SID_ENTERCHAT:
                                 this.getHandleMsg(BnetCode.ENTERCHAT);
                                 this.getHandleMsg(Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray()));
-                                this.bnetUserUid = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                this.bnetUserUid = bnetPackSt.getUsername(bnetPackSt.getData(bnetPackSt.pack_data.ToArray()));
                                 OnChatLogined(this.bnetUserUid);
                                 bnetProtocol.setBnetByte(0x01);
                                 bnetProtocol.setBnetByte(firstJoinChannel, true);
@@ -304,17 +304,17 @@ namespace Bnet
                                 uint flags = BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 4);
                                 uint ping = BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 8);
                                 String message;
-                                string user = bnetPackSt.getData(bnetPackSt.pack_data.ToArray(), 24);
+                                BnetUsername user = bnetPackSt.getUsername(bnetPackSt.getData(bnetPackSt.pack_data.ToArray(), 24));
 
                                 switch (bnetPacketEvent)
                                 {
                                     case BnetPacketEvent.EID_CHANNEL:
                                         String channel = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
-                                        this.getHandleMsg("유저 확인:" + user);
-                                        OnChatInfo(this.bnetUserUid, channel + " 채널에 입장.");
+                                        this.getHandleMsg("유저 확인:" + user.name);
+                                        OnChatInfo(this.bnetUserUid, "님이 " + channel + " 채널에 입장.");
                                         break;
                                     case BnetPacketEvent.EID_SHOWUSER:
-                                        this.getHandleMsg("유저 확인:" + user);
+                                        this.getHandleMsg("유저 확인:" + user.name);
                                         break;
                                     case BnetPacketEvent.EID_ERROR:
                                         message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
@@ -367,7 +367,7 @@ namespace Bnet
                                 int player;
                                 for (player = 0; player < cnt; player++)
                                 {
-                                    bnetFriends[player].name = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                    bnetFriends[player].name = bnetPackSt.getUsername(bnetPackSt.getData(bnetPackSt.pack_data.ToArray()));
                                     seek = bnetPackSt.getSeek();
                                     bnetFriends[player].status = bnetPackSt.pack_data[(int)seek++];
                                     bnetFriends[player].location = bnetPackSt.pack_data[(int)seek++];

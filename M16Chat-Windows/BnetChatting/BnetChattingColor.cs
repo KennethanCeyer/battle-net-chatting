@@ -16,6 +16,13 @@ namespace M16Chat_Windows.BnetChatting
         Me = 0x05
     }
 
+    public enum BnetChattingStatus
+    {
+        Default = 0x00,
+        Join = 0x01,
+        Leave = 0x02
+    }
+
     public struct BnetChattingRGB
     {
         public byte r;

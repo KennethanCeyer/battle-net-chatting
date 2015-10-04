@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Bnet.BnetConnect
@@ -25,6 +26,41 @@ namespace Bnet.BnetConnect
                 part[j] = data[i];
             }
             return Encoding.UTF8.GetString(part);
+        }
+
+        public BnetUsername getUsername(String username)
+        {
+            String decoding = username, color = null;
+            char[] divider = { '|', 'C', 'F', 'F' };
+            int step = 0;
+            for(int i=0; i<decoding.Length; i++)
+            {
+                if (step < 4)
+                {
+                    if (decoding[i] == divider[step])
+                    {
+                        if(step < 3)
+                        {
+                            step++;
+                        } else
+                        {
+                            step = i + 1;
+                        }
+                    }
+                    else
+                    {
+                        step = 0;
+                    }
+                } else
+                {
+                    decoding = username.Substring(step + 6);
+                    color = username.Substring(step, 6);
+                }
+            }
+            BnetUsername bnetUsername = new BnetUsername();
+            bnetUsername.name = decoding;
+            bnetUsername.color = color;
+            return bnetUsername;
         }
 
         public uint getSeek()

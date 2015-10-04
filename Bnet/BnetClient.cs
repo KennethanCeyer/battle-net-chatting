@@ -66,6 +66,7 @@ namespace Bnet
 
         public void commandFriendsUpdate(Socket bnetSock)
         {
+            this.getHandleMsg(BnetCode.Request_FriendList);
             bnetProtocol.send(bnetSock, BnetPacketModel.SID_FRIENDSLIST);
         }
 
@@ -188,10 +189,20 @@ namespace Bnet
                 receiveDone.Reset();
                 Socket recvSock = (Socket)IAR.AsyncState;
                 int receiveLen = recvSock.EndReceive(IAR);
+                byte[] receiveBuffer = this.sockBuffer;
                 receiveDone.Set();
+
+                try
+                {
+                    this.BindREceiveHandler(recvSock);
+                }
+                catch (SocketException e)
+                {
+                    this.getHandleMsg(e.Message);
+                }
+
                 if (receiveLen > 0)
                 {
-                    byte[] receiveBuffer = this.sockBuffer;
                     if (receiveBuffer[0] == 0xFF)
                     {
                         int bnetResult;
@@ -389,7 +400,6 @@ namespace Bnet
                         }
                     }
                 }
-                this.BindREceiveHandler(recvSock);
             }
             catch (SocketException e)
             {

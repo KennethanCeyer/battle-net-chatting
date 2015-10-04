@@ -249,9 +249,9 @@ namespace M16Chat_Windows
 
         private void OnChatSockError()
         {
-            this.AddListItem("M16 서버와의 연결이 종료되었습니다.", BnetChattingColor.Error);
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
+                this.AddListItem("M16 서버와의 연결이 종료되었습니다.", BnetChattingColor.Error);
                 MainChatInput.IsEnabled = false;
             }));
         }

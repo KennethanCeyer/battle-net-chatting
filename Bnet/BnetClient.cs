@@ -35,6 +35,7 @@ namespace Bnet
         public delegate void OnChatWhisperDelegate(BnetUsername user, String message);
         public delegate void OnChatSockErrorDelegate();
         public delegate void OnChatFriendsUpdateDelegate(BnetFriends[] bnetFriends);
+        public delegate void OnChatUserChannelMoveDelegate(BnetUsername user, String channel);
 
         public static event OnChatLoginedDelegate OnChatLogined;
         public static event OnChatUserDelegate OnChatUser;
@@ -45,12 +46,13 @@ namespace Bnet
         public static event OnChatWhisperDelegate OnChatWhisper;
         public static event OnChatSockErrorDelegate OnChatSockError;
         public static event OnChatFriendsUpdateDelegate OnChatFriendsUpdate;
+        public static event OnChatUserChannelMoveDelegate OnChatUserChannelMove;
 
         private const string firstJoinChannel = "ib";
         private static Dictionary<String, String> bnetConInfo;
         private Socket bnetSock;
         private BnetProtocol bnetProtocol = new BnetProtocol();
-        private byte[] sockBuffer = new byte[1024];
+        private byte[] sockBuffer;
         private String bnetUsrId, bnetUserPw;
         public BnetUsername bnetUserUid;
         public BnetHelper bnetHelper = BnetHelper.getInstance();
@@ -85,6 +87,7 @@ namespace Bnet
             this.bnetSock.ReceiveTimeout = 3000;
             this.bnetSock.SendTimeout = 3000;
             this.getHandleMsg(BnetCode.ConnectionWithServer);
+            this.sockBuffer = new byte[this.bnetSock.ReceiveBufferSize];
             try {
                 connectDone.Reset();
                 this.bnetSock.BeginConnect(bnetServerEP, new AsyncCallback(OnConnectCallback), this.bnetSock);
@@ -179,7 +182,7 @@ namespace Bnet
 
         public void BindREceiveHandler(Socket cSock)
         {
-            cSock.BeginReceive(sockBuffer, 0, sockBuffer.Length, SocketFlags.None, new AsyncCallback(OnReceiveCallback), cSock);
+            cSock.BeginReceive(sockBuffer, 0, cSock.ReceiveBufferSize, SocketFlags.None, new AsyncCallback(OnReceiveCallback), cSock);
         }
 
         public void OnReceiveCallback(IAsyncResult IAR)
@@ -192,15 +195,6 @@ namespace Bnet
                 byte[] receiveBuffer = this.sockBuffer;
                 receiveDone.Set();
 
-                try
-                {
-                    this.BindREceiveHandler(recvSock);
-                }
-                catch (SocketException e)
-                {
-                    this.getHandleMsg(e.Message);
-                }
-
                 if (receiveLen > 0)
                 {
                     if (receiveBuffer[0] == 0xFF)
@@ -212,6 +206,7 @@ namespace Bnet
                             case BnetPacketModel.SID_OPTIONALWORK:
                             case BnetPacketModel.SID_EXTRAWORK:
                             case BnetPacketModel.SID_REQUIREDWORK:
+                                this.getHandleMsg("미사용 패킷: " + bnetPackSt.packet_id.ToString("X"));
                                 break;
                             case BnetPacketModel.SID_NULL:
                                 bnetProtocol.send(recvSock, BnetPacketModel.SID_NULL);
@@ -307,8 +302,8 @@ namespace Bnet
                                 bnetProtocol.setBnetByte(firstJoinChannel, true);
                                 bnetProtocol.send(recvSock, BnetPacketModel.SID_JOINCHANNEL);
                                 this.commandFriendsUpdate(this.bnetSock);
-                                Thread musicBotThread = new Thread(new ThreadStart(MusicBot));
-                                musicBotThread.Start();
+                                //Thread musicBotThread = new Thread(new ThreadStart(MusicBot));
+                                //musicBotThread.Start();
                                 break;
                             case BnetPacketModel.SID_CHATEVENT:
                                 BnetPacketEvent bnetPacketEvent = (BnetPacketEvent)BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 0);
@@ -323,6 +318,11 @@ namespace Bnet
                                         String channel = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                         this.getHandleMsg("유저 확인:" + user.name);
                                         OnChatInfo(this.bnetUserUid, "님이 " + channel + " 채널에 입장.");
+                                        OnChatUserChannelMove(this.bnetUserUid, channel);
+                                        break;
+                                    case BnetPacketEvent.EID_USERFLAGS:
+                                        this.getHandleMsg("유저 확인:" + user.name);
+                                        bnetPacketStream.getUserFlags(bnetPackSt);
                                         break;
                                     case BnetPacketEvent.EID_SHOWUSER:
                                         this.getHandleMsg("유저 확인:" + user.name);
@@ -360,11 +360,6 @@ namespace Bnet
                                         OnChatLeave(user);
                                         break;
                                     default:
-                                        bnetProtocol.setBnetByte(0x00000000);
-                                        bnetProtocol.setBnetByte(0x00000000);
-                                        bnetProtocol.setBnetByte(0x00000000);
-                                        bnetProtocol.setBnetByte(0x00000000);
-                                        bnetProtocol.send(recvSock, BnetPacketModel.SID_CHECKAD);
                                         this.getHandleMsg("별도 타입 패킷 [EID]: " + bnetPacketEvent.ToString("X"));
                                         break;
                                 }
@@ -386,10 +381,11 @@ namespace Bnet
                                     bnetFriends[player].locationName = bnetPackSt.getData(bnetPackSt.pack_data.ToArray(), seek + 4);
                                 }
 
-                                try {
+                                try
+                                {
                                     OnChatFriendsUpdate(bnetFriends);
                                 }
-                                catch(NullReferenceException e)
+                                catch (NullReferenceException e)
                                 {
                                     this.getHandleMsg(e.StackTrace);
                                 }
@@ -399,6 +395,11 @@ namespace Bnet
                                 break;
                         }
                     }
+                    this.BindREceiveHandler(recvSock);
+                }
+                else
+                {
+                    recvSock.Close();
                 }
             }
             catch (SocketException e)

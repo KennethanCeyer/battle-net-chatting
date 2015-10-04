@@ -317,6 +317,14 @@ namespace M16Chat_Windows
             }));
         }
 
+        private void OnChatUserChannelMoveHandler(BnetUsername user, String channel)
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                this.MainChannel.Text = channel;
+            }));
+        }
+
         private void Initializing(object sender, RoutedEventArgs e)
         {
             BnetClient.OnChatUser += new BnetClient.OnChatUserDelegate(OnChatUserHandler);
@@ -328,6 +336,7 @@ namespace M16Chat_Windows
             BnetClient.OnChatLogined += new BnetClient.OnChatLoginedDelegate(OnChatLoginHandler);
             BnetClient.OnChatSockError += new BnetClient.OnChatSockErrorDelegate(OnChatSockError);
             BnetClient.OnChatFriendsUpdate += new BnetClient.OnChatFriendsUpdateDelegate(OnChatFriendsUpdateHandler);
+            BnetClient.OnChatUserChannelMove += new BnetClient.OnChatUserChannelMoveDelegate(OnChatUserChannelMoveHandler);
             this.ShowLoginDialog(sender, e);
         }
 

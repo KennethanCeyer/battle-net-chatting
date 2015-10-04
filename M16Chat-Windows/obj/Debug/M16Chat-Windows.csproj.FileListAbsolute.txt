@@ -31,3 +31,5 @@ C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\bin\Debug\M16Cha
 C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\M16Chat-Windows.TrustInfo.xml
 C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\M16Chat-Windows.exe.manifest
 C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\M16Chat-Windows.application
+C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\Resources\Icons.baml
+C:\Users\user1\Desktop\M16-Chatting-For-Windows\M16Chat-Windows\obj\Debug\Resources\Icons.g.cs

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,28 @@ namespace Bnet.BnetConnect
                 }
             }
             return i;
+        }
+
+        public void getUserFlags(BnetPacketStruct bnetPackSt)
+        {
+            /*if(bnetPackSt.packet_id == BnetPacketModel.SID_CHATEVENT)
+            {
+                int totalLen = bnetPackSt.pack_data.Count + 4;
+                BnetProtocol bnetProtocol = new BnetProtocol();
+                BnetPacketStruct bnetPackGroup = new BnetPacketStruct();
+                BnetPacketStruct curPackSt = new BnetPacketStruct();
+                for(int i = 0; i < totalLen; i += (int) (bnetPackSt.packet_len))
+                {
+                    curPackSt = bnetPackSt;
+                    curPackSt.pack_data = curPackSt.pack_data.Skip((int)bnetPackSt.packet_len).Take((int)bnetPackSt.packet_len + 4);
+                    bnetPackGroup.Add(bnetPackSt);
+                    bnetPackSt.pack_data.Skip();
+                    bnetPackSt = bnetProtocol.decapsulize(bnetPackSt.pack_data.ToArray());
+                }
+                
+                Debug.WriteLine(bnetPackSt.packet_len);
+                bnetProtocol.decapsulize(receiveBuffer);
+            }*/
         }
 
         public int readWord(byte[] data, uint pos)

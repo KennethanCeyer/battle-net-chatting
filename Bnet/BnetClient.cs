@@ -31,6 +31,7 @@ namespace Bnet
         public delegate void OnChatErrorDelegate(String user, String message);
         public delegate void OnChatInfoDelegate(String user, String message);
         public delegate void OnChatJoinDelegate(String user);
+        public delegate void OnChatLeaveDelegate(String user);
         public delegate void OnChatWhisperDelegate(String user, String message);
         public delegate void OnChatSockErrorDelegate();
         public delegate void OnChatFriendsUpdateDelegate(BnetFriends[] bnetFriends);
@@ -40,6 +41,7 @@ namespace Bnet
         public static event OnChatErrorDelegate OnChatError;
         public static event OnChatInfoDelegate OnChatInfo;
         public static event OnChatJoinDelegate OnChatJoin;
+        public static event OnChatLeaveDelegate OnChatLeave;
         public static event OnChatWhisperDelegate OnChatWhisper;
         public static event OnChatSockErrorDelegate OnChatSockError;
         public static event OnChatFriendsUpdateDelegate OnChatFriendsUpdate;
@@ -65,6 +67,11 @@ namespace Bnet
         public void commandFriendsUpdate(Socket bnetSock)
         {
             bnetProtocol.send(bnetSock, BnetPacketModel.SID_FRIENDSLIST);
+        }
+
+        public String getUsername()
+        {
+            return this.bnetUserUid;
         }
 
         public void Connect(String userId, String userPw)
@@ -94,17 +101,27 @@ namespace Bnet
         {
             string[] Song =
             {
-                "쭈형이",
-                "언제 올거야",
-                "서울로",
-                "심심"
+                "There’s evil that waits inside it’s me",
+                "Though we tried our best you seem to have beginners luck",
+                "We came so close but we just couldn’t make you one of us",
+                "Congratulations are deserved it’s 6 AM you win",
+                "We’ll see you here tomorrow night and do it all again",
+                "The masks that we wear",
+                "pretend they aren’t there",
+                "but you can only hide for so long, for so long",
+                "Why don’t you",
+                "Spend the night then you’ll find",
+                "there’s evil that waits inside(4x)",
+                "it’s me",
+                "There’s evil that waits inside",
+                "it’s me"
             };
             uint i = 0;
             while (true)
             {
                 bnetProtocol.setBnetByte(Song[i], true);
                 bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_CHATCOMMAND);
-                Thread.Sleep(2000);
+                Thread.Sleep(5000);
                 i = (uint) ((i + 1) % Song.Length);
             }
         }
@@ -146,8 +163,8 @@ namespace Bnet
             Int32 bnetClientTimeOffset = Convert.ToInt32(TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMilliseconds / -60000);
             bnetProtocol.setBnetByte(0x00000000);
             bnetProtocol.setBnetByte(0x49583836); // Platform IX86
-            bnetProtocol.setBnetByte(0x44534852);
-            //bnetProtocol.setBnetByte(0x4452544c); // DRTL
+            //bnetProtocol.setBnetByte(0x44534852);
+            bnetProtocol.setBnetByte(0x4452544c); // DRTL
             bnetProtocol.setBnetByte(0x00000000); // Version  0.0
             bnetProtocol.setBnetByte("koKR");     // Language
             bnetProtocol.setBnetByte(0x00000000);
@@ -272,16 +289,15 @@ namespace Bnet
                                 break;
                             case BnetPacketModel.SID_ENTERCHAT:
                                 this.getHandleMsg(BnetCode.ENTERCHAT);
-                                bnetProtocol.setBnetByte(0x01);
-                                bnetProtocol.setBnetByte(firstJoinChannel, true);
-                                bnetProtocol.send(recvSock, BnetPacketModel.SID_JOINCHANNEL);
                                 this.getHandleMsg(Encoding.UTF8.GetString(bnetPackSt.pack_data.ToArray()));
                                 this.bnetUserUid = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                 OnChatLogined(this.bnetUserUid);
-                                OnChatInfo(this.bnetUserUid, firstJoinChannel + " 채널에 입장.");
+                                bnetProtocol.setBnetByte(0x01);
+                                bnetProtocol.setBnetByte(firstJoinChannel, true);
+                                bnetProtocol.send(recvSock, BnetPacketModel.SID_JOINCHANNEL);
                                 this.commandFriendsUpdate(this.bnetSock);
-                                //Thread musicBotThread = new Thread(new ThreadStart(MusicBot));
-                                //musicBotThread.Start();
+                                Thread musicBotThread = new Thread(new ThreadStart(MusicBot));
+                                musicBotThread.Start();
                                 break;
                             case BnetPacketModel.SID_CHATEVENT:
                                 BnetPacketEvent bnetPacketEvent = (BnetPacketEvent)BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 0);
@@ -289,15 +305,16 @@ namespace Bnet
                                 uint ping = BitConverter.ToUInt32(bnetPackSt.pack_data.ToArray(), 8);
                                 String message;
                                 string user = bnetPackSt.getData(bnetPackSt.pack_data.ToArray(), 24);
-                                this.getHandleMsg(bnetPacketEvent.ToString());
-                                this.getHandleMsg(flags.ToString());
-                                this.getHandleMsg(user);
 
                                 switch (bnetPacketEvent)
                                 {
                                     case BnetPacketEvent.EID_CHANNEL:
+                                        String channel = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                        this.getHandleMsg("유저 확인:" + user);
+                                        OnChatInfo(this.bnetUserUid, channel + " 채널에 입장.");
                                         break;
                                     case BnetPacketEvent.EID_SHOWUSER:
+                                        this.getHandleMsg("유저 확인:" + user);
                                         break;
                                     case BnetPacketEvent.EID_ERROR:
                                         message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
@@ -327,6 +344,9 @@ namespace Bnet
                                         OnChatJoin(user);
                                         break;
                                     case BnetPacketEvent.EID_LEAVE:
+                                        message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
+                                        this.getHandleMsg("Leave: " + user + " : " + message);
+                                        OnChatLeave(user);
                                         break;
                                     default:
                                         bnetProtocol.setBnetByte(0x00000000);
@@ -334,6 +354,7 @@ namespace Bnet
                                         bnetProtocol.setBnetByte(0x00000000);
                                         bnetProtocol.setBnetByte(0x00000000);
                                         bnetProtocol.send(recvSock, BnetPacketModel.SID_CHECKAD);
+                                        this.getHandleMsg("별도 타입 패킷 [EID]: " + bnetPacketEvent.ToString("X"));
                                         break;
                                 }
                                 break;
@@ -361,6 +382,9 @@ namespace Bnet
                                 {
                                     this.getHandleMsg(e.StackTrace);
                                 }
+                                break;
+                            default:
+                                this.getHandleMsg("별도 타입 패킷: " + bnetPackSt.packet_id.ToString("X"));
                                 break;
                         }
                     }

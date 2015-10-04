@@ -19,6 +19,7 @@ namespace M16Chat_Windows
     {
         private static String bServerIP = "m16-chat.ggu.la";
         private static String bServerPort = "6112";
+        private static String bnetUsername;
         private BnetClient bClient = new BnetClient(bServerIP, bServerPort);
 
         private async void ShowLoginDialog(object sender, RoutedEventArgs e)
@@ -140,6 +141,7 @@ namespace M16Chat_Windows
                 MainChatInput.IsEnabled = true;
                 MainChatInput.Focus();
                 this.AddListItem(user + "님이 입장하셨습니다.", BnetChattingColor.Info);
+                bnetUsername = bClient.getUsername();
                 MainSpinner.IsActive = false;
             }));
         }
@@ -181,6 +183,13 @@ namespace M16Chat_Windows
             }));
         }
 
+        private void OnChatLeaveHandler(String user)
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
+                this.AddListItem("[알림]: " + user + "님이 나가셨습니다.", BnetChattingColor.Info);
+            }));
+        }
+
         private void OnChatWhisperHandler(String user, String message)
         {
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate {
@@ -195,7 +204,7 @@ namespace M16Chat_Windows
                 BnetChattingColor bnetChattingColor = new BnetChattingColor();
                 for (int i=0; i<bnetFriends.Length; i++)
                 {
-                    if(bnetFriends[i].name == bClient.bnetUserUid)
+                    if(bnetFriends[i].name == bnetUsername)
                     {
                         bnetChattingColor = BnetChattingColor.Me;
                     } else
@@ -213,6 +222,7 @@ namespace M16Chat_Windows
             BnetClient.OnChatError += new BnetClient.OnChatErrorDelegate(OnChatErrorHandler);
             BnetClient.OnChatInfo += new BnetClient.OnChatInfoDelegate(OnChatInfoHandler);
             BnetClient.OnChatJoin += new BnetClient.OnChatJoinDelegate(OnChatJoinHandler);
+            BnetClient.OnChatLeave += new BnetClient.OnChatLeaveDelegate(OnChatLeaveHandler);
             BnetClient.OnChatWhisper += new BnetClient.OnChatWhisperDelegate(OnChatWhisperHandler);
             BnetClient.OnChatLogined += new BnetClient.OnChatLoginedDelegate(OnChatLoginHandler);
             BnetClient.OnChatSockError += new BnetClient.OnChatSockErrorDelegate(OnChatSockError);
@@ -229,7 +239,7 @@ namespace M16Chat_Windows
                 this.MainChatInput.Text = "";
                 if (input[0] != '/')
                 {
-                    this.AddListItem(bClient.bnetUserUid + ": " + input, BnetChattingColor.Me);
+                    this.AddListItem(bnetUsername + ": " + input, BnetChattingColor.Me);
                 }
             }
         }

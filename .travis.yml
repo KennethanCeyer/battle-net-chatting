@@ -1,3 +1,0 @@
-language: csharp
-solution: M16Chat-Windows.sln
-script:    # the following commands for the building.

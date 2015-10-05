@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="M16Chat-Windows.exe" version="0.0.3.0" publicKeyToken="f7f2a98516ebe111" language="neutral" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="icon.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="M16Chat-Windows" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="M16Chat-Windows.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet version="1" class="System.Security.NamedPermissionSet" Name="LocalIntranet" Description="Default rights given to applications on the local intranet" Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!-- UAC 매니페스트 옵션
+             Windows 사용자 계정 컨트롤 수준을 변경하려면 
+             requestedExecutionLevel 노드를 다음 중 하나로 바꿉니다.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+            requestedExecutionLevel 요소를 지정하면 파일 및 레지스트리 가상화를 사용하지 않습니다. 
+            이전 버전과의 호환성을 위해 응용 프로그램에 가상화가 필요한 경우
+            이 요소를 제거합니다.
+-->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Bnet.dll" size="401920">
+      <assemblyIdentity name="Bnet" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>TPYdYTlfOOq1LVg3Rf1WF2Wsb+1PEQnUki7fmlSnjHk=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="M16Chat-Windows.exe" size="2204744">
+      <assemblyIdentity name="M16Chat-Windows" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>SlNM0HXA04rWqQaGv2rjTgvqzsMRelds80VhnOP8pSw=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MahApps.Metro.dll" size="849920">
+      <assemblyIdentity name="MahApps.Metro" version="1.1.2.0" publicKeyToken="F4FB5A3C4D1E5B4F" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>r5R2dAFxVrruWw/REoZQ811Lpi4VZdh9iu/gIyH0I8U=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Microsoft.Threading.Tasks.dll" size="37104">
+      <assemblyIdentity name="Microsoft.Threading.Tasks" version="1.0.12.0" publicKeyToken="B03F5F7F11D50A3A" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>Xynhbt/1N56T1b6b7kzd+YEyuEMmAnaIURrA8xV6r5Q=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Microsoft.Threading.Tasks.Extensions.dll" size="31520">
+      <assemblyIdentity name="Microsoft.Threading.Tasks.Extensions" version="1.0.12.0" publicKeyToken="B03F5F7F11D50A3A" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>kvHQ1sz7DQMHifPFxjb83Qj20FQaWlTxhejs2FWS4/k=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Microsoft.Threading.Tasks.Extensions.Desktop.dll" size="47424">
+      <assemblyIdentity name="Microsoft.Threading.Tasks.Extensions.Desktop" version="1.0.168.0" publicKeyToken="B03F5F7F11D50A3A" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>9xYhxHxhDgiGhGz1PZVf0OdEiVH5nswi+s1HST75eoc=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="System.Windows.Interactivity.dll" size="55904">
+      <assemblyIdentity name="System.Windows.Interactivity" version="4.5.0.0" publicKeyToken="31BF3856AD364E35" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>k/vFnkiAr8nxNsOsCXatp/P6p8rO3OXIJLM3y8qdLr8=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="icon.ico" size="370070">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>C0e6vQ07afvBRkTCrJNo/+OQenZvCSGHLgnul2miQFw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="M16Chat-Windows.exe.config" size="184">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>FqWy0dfMmRS85zkU1NlW07p6LsNOPUHodvLiZcFdgJY=</dsig:DigestValue>
+    </hash>
+  </file>
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- 이 응용 프로그램이 테스트되고 함께 작동하도록 설계된 Windows 버전
+           목록입니다. 적절한 요소의 주석 처리를 제거하면 Windows에서 
+           호환 가능성이 가장 높은 환경을 자동으로 선택합니다. -->
+      <!-- Windows Vista -->
+      <!--<supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}" />-->
+      <!-- Windows 7 -->
+      <!--<supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}" />-->
+      <!-- Windows 8 -->
+      <!--<supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}" />-->
+      <!-- Windows 8.1 -->
+      <!--<supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}" />-->
+      <!-- Windows 10 -->
+      <!--<supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />-->
+    </application>
+  </compatibility>
+<publisherIdentity name="CN={FF9F642D-BFBD-4403-9191-AA3B3C6AD44B}" issuerKeyHash="81260bcbbed722b5591900be5f1db0c57ce0674d" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>mBBMSG5uXKeF4JLgNyC4K6f4AjvV+T+omfFpdJDzqRs=</DigestValue></Reference></SignedInfo><SignatureValue>lAZ56vVzMYbiDEZ3giHRvu7VRMm+oo8WfrhAxrmVwcA1LBMzaDnZy0Rv+XdGfj8vF/P+ac+j5O7IDBmNsAYmyFxIHcw80Y6cdm8LXYWzz6ALyLMjjniU+whEh/hygQyyflUC/G9pPrDeCWCHhufqmET0qkbZSF22mOzWYad7Mi4=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>x/x9dXNM/TS5JBj5SPK+ceXimzYX3LOSUEg8q2869vLpIb1fjc+BVx6sZLeo91DlLuBETV3VjDTm62gQNzSnijnp+9j9cxFQRpVuRb6Sv0IPM0xqABDCdreq3h29zGI58EFFPNP25dLTmCgBbv608rwLnbindTwcNOco7Frayc8=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="1ba9f3907469f199a83ff9d53b02f8a72bb82037e092e085a75c6e6e484c1098" Description="" Url=""><as:assemblyIdentity name="M16Chat-Windows.exe" version="0.0.3.0" publicKeyToken="f7f2a98516ebe111" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN={FF9F642D-BFBD-4403-9191-AA3B3C6AD44B}</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>ARbtaySJNy6jmDNaFn9QqfFHU3gHsSPRs6iyGjWfv5A=</DigestValue></Reference></SignedInfo><SignatureValue>D5gIbHr74nhSCOsNWEvi2yzsPQRyO4anxp7iaIdat1GL4HOGosFDtV1Rw5AgdNhLZpbEvVG5JBNW5MALlcFNxocEtMBs1Ex+l2R8KPlkCcDEWpfNrrzcgrTO1Pr4dv6AMtNifOchx1vC6kgaXpOi6xtpzrNrwKlr33gef82rSvw=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>x/x9dXNM/TS5JBj5SPK+ceXimzYX3LOSUEg8q2869vLpIb1fjc+BVx6sZLeo91DlLuBETV3VjDTm62gQNzSnijnp+9j9cxFQRpVuRb6Sv0IPM0xqABDCdreq3h29zGI58EFFPNP25dLTmCgBbv608rwLnbindTwcNOco7Frayc8=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIICMTCCAZqgAwIBAgIQMaobyMrcUbJP8yhCGNHoUTANBgkqhkiG9w0BAQsFADBXMVUwUwYDVQQDHkwAewBGAEYAOQBGADYANAAyAEQALQBCAEYAQgBEAC0ANAA0ADAAMwAtADkAMQA5ADEALQBBAEEAMwBCADMAQwA2AEEARAA0ADQAQgB9MB4XDTE1MTAwMjA5NTcwOVoXDTE2MTAwMTE1NTcwOVowVzFVMFMGA1UEAx5MAHsARgBGADkARgA2ADQAMgBEAC0AQgBGAEIARAAtADQANAAwADMALQA5ADEAOQAxAC0AQQBBADMAQgAzAEMANgBBAEQANAA0AEIAfTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAx/x9dXNM/TS5JBj5SPK+ceXimzYX3LOSUEg8q2869vLpIb1fjc+BVx6sZLeo91DlLuBETV3VjDTm62gQNzSnijnp+9j9cxFQRpVuRb6Sv0IPM0xqABDCdreq3h29zGI58EFFPNP25dLTmCgBbv608rwLnbindTwcNOco7Frayc8CAwEAATANBgkqhkiG9w0BAQsFAAOBgQAsGDlD3m28tO7bVFdzl9J+2mM8Jig+goOV8Vcd6RrsYx+It2kkNuyiC24U4PyTk36oXCDrG1y0lSnACFoId8LDewD0LivzH5iRpC6Muzi9wMaTgCzMzucmsKsNhAr4U4/RTC7DRujGw2bD5j9+C/ocPgu2SNmdWORoq3T7AsLN4Q==</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

@@ -78,6 +78,10 @@ namespace Bnet.BnetConnect
             {
                 BnetClient.OnConnectError();
             }
+            catch(ObjectDisposedException e)
+            {
+                BnetClient.OnConnectError();
+            }
             bnetData.Clear();
         }
 

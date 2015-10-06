@@ -392,5 +392,22 @@ namespace M16Chat_Windows
                 OnChatSend(sender, e);
             }
         }
+
+        private void OnFriendTabActive(object sender, ContextMenuEventArgs e)
+        {
+            Debug.WriteLine("AA");
+            bClient.commandFriendsUpdate(bClient.getBnetSock());
+        }
+
+        private void MainTabChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int tabItem = ((sender as TabControl)).SelectedIndex;
+            switch(tabItem)
+            {
+                default:
+                    Debug.WriteLine("Tab : " + tabItem);
+                    break;
+            }
+        }
     }
 }

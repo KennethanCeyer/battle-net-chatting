@@ -82,7 +82,7 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TabControl x:Name="tabControl" Margin="10" Grid.ColumnSpan="2">
+        <TabControl x:Name="tabControl" Margin="10" Grid.ColumnSpan="2" SelectionChanged="MainTabChanged">
             <TabItem Header="대화">
                 <Grid Margin="5">
                     <Grid.RowDefinitions>

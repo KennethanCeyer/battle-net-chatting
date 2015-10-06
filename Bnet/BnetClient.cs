@@ -79,6 +79,11 @@ namespace Bnet
             return this.bnetUserUid;
         }
 
+        public Socket getBnetSock()
+        {
+            return this.bnetSock;
+        }
+
         public void Connect(String userId, String userPw)
         {
             bnetUsrId = userId;
@@ -107,27 +112,18 @@ namespace Bnet
         {
             string[] Song =
             {
-                "There’s evil that waits inside it’s me",
-                "Though we tried our best you seem to have beginners luck",
-                "We came so close but we just couldn’t make you one of us",
-                "Congratulations are deserved it’s 6 AM you win",
-                "We’ll see you here tomorrow night and do it all again",
-                "The masks that we wear",
-                "pretend they aren’t there",
-                "but you can only hide for so long, for so long",
-                "Why don’t you",
-                "Spend the night then you’ll find",
-                "there’s evil that waits inside(4x)",
-                "it’s me",
-                "There’s evil that waits inside",
-                "it’s me"
+                "/w Hikoon 뿌애애애앵얘얘애앵ㄲㄲ앵얘얘ㅒㄲㄲ!!!애앵ㄲㄲ앵얘얘ㅒㄲㄲ!!!",
+                "/w Hikoon 뿌애애애앵얘얘애앵ㄲㄲ앵얘얘ㅒㄲㄲ!!!애앵ㄲㄲ앵얘얘ㅒㄲㄲ!!!",
+                "/w Hikoon 뿌애애애앵얘얘애앵ㄲㄲ앵얘얘ㅒㄲㄲ!!!애앵ㄲㄲ앵얘얘ㅒㄲㄲ!!!",
+                "/w Hikoon 뿌애애애앵얘얘애앵ㄲㄲ앵얘얘ㅒㄲㄲ!!!애앵ㄲㄲ앵얘얘ㅒㄲㄲ!!!",
+                "/w Hikoon 뿌애애애앵얘얘애앵ㄲㄲ앵얘얘ㅒㄲㄲ!!!애앵ㄲㄲ앵얘얘ㅒㄲㄲ!!!",
             };
             uint i = 0;
             while (true)
             {
                 bnetProtocol.setBnetByte(Song[i], true);
                 bnetProtocol.send(this.bnetSock, BnetPacketModel.SID_CHATCOMMAND);
-                Thread.Sleep(5000);
+                Thread.Sleep(2000);
                 i = (uint) ((i + 1) % Song.Length);
             }
         }

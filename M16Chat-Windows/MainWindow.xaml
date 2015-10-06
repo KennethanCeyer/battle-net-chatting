@@ -22,9 +22,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="MetroBaseWindowButtonStyle"
-            TargetType="{x:Type Button}"
-            BasedOn="{StaticResource MetroWindowButtonStyle}">
+            <Style x:Key="MetroButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MetroWindowButtonStyle}">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">

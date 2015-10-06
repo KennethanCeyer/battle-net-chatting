@@ -398,14 +398,23 @@ namespace M16Chat_Windows
                     this.AddListItem(bnetUsername, input, BnetChattingColor.Me);
                 }
             }
+            MainChatInput.Focus();
         }
 
         private void OnInputPress(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            KeyEventArgs keyCode = (KeyEventArgs)e;
+            if (keyCode.Key == Key.Enter)
             {
                 e.Handled = true;
                 OnChatSend(sender, e);
+            }
+            else if(keyCode.Key == Key.Space)
+            {
+                if (MainChatInput.Text == "/r ")
+                {
+                    Debug.WriteLine("귓속말");
+                }
             }
         }
 

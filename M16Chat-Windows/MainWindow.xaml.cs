@@ -393,20 +393,37 @@ namespace M16Chat_Windows
             }
         }
 
-        private void OnFriendTabActive(object sender, ContextMenuEventArgs e)
+        private void OnFriendTabActive()
         {
-            Debug.WriteLine("AA");
             bClient.commandFriendsUpdate(bClient.getBnetSock());
         }
 
         private void MainTabChanged(object sender, SelectionChangedEventArgs e)
         {
             int tabItem = ((sender as TabControl)).SelectedIndex;
-            switch(tabItem)
+            if (e.Source is TabControl)
             {
-                default:
-                    Debug.WriteLine("Tab : " + tabItem);
-                    break;
+                switch (tabItem)
+                {
+                    case 0:    // Chatting
+                        Debug.WriteLine("Tab: Chatting");
+                        if (MainChatList.Items.Count > 0)
+                        {
+                            MainChatList.SelectedIndex = MainChatList.Items.Count - 1;
+                            MainChatList.ScrollIntoView(MainChatList.Items[MainChatList.Items.Count - 1]);
+                        }
+                        break;
+                    case 1:    // Users
+                        Debug.WriteLine("Tab: Users");
+                        break;
+                    case 2:    // Friends
+                        Debug.WriteLine("Tab: Friends");
+                        this.OnFriendTabActive();
+                        break;
+                    default:
+                        Debug.WriteLine("Tab: " + tabItem);
+                        break;
+                }
             }
         }
     }

@@ -103,11 +103,27 @@ namespace M16Chat_Windows
             {
                 if(bnetChattingStatus == BnetChattingStatus.Join)
                 {
-                    message = "님이 입장하셨습니다.";
+                    String currentChannel = bClient.getCurrentChannel();
+                    if (currentChannel != "")
+                    {
+                        message = "님이 채널 [" + currentChannel + "]에 입장하셨습니다.";
+                    }
+                    else
+                    {
+                        message = "님이 입장하셨습니다.";
+                    }
                 }
                 else if(bnetChattingStatus == BnetChattingStatus.Leave)
                 {
-                    message = "님이 나가셨습니다.";
+                    String currentChannel = bClient.getCurrentChannel();
+                    if (currentChannel != "")
+                    {
+                        message = "님이 채널 [" + currentChannel + "]에서 나가셨습니다.";
+                    }
+                    else
+                    {
+                        message = "님이 나가셨습니다.";
+                    }
                 }
             }
 

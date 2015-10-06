@@ -53,6 +53,7 @@ namespace Bnet
         private const string firstJoinChannel = "ib";
         private static Dictionary<String, String> bnetConInfo;
         private Socket bnetSock;
+        private String bnetCurrentChannel = "";
         private BnetProtocol bnetProtocol = new BnetProtocol();
         private byte[] sockBuffer;
         private String bnetUsrId, bnetUserPw;
@@ -82,6 +83,11 @@ namespace Bnet
         public Socket getBnetSock()
         {
             return this.bnetSock;
+        }
+
+        public String getCurrentChannel()
+        {
+            return bnetCurrentChannel;
         }
 
         public void Connect(String userId, String userPw)
@@ -319,6 +325,7 @@ namespace Bnet
                                     case BnetPacketEvent.EID_CHANNEL:
                                         String channel = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                         this.getHandleMsg("유저 확인:" + user.name);
+                                        bnetCurrentChannel = channel;
                                         OnChatInfo(this.bnetUserUid, "님이 " + channel + " 채널에 입장.");
                                         OnChatUserChannelMove(this.bnetUserUid, channel);
                                         break;

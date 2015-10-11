@@ -2,6 +2,8 @@
 
 > Warcraft III Battlenet chatting for windows!
 
+ [![Join the chat at https://gitter.im/KennethanCeyer/PIGNOSE](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KennethanCeyer/PIGNOSE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ![Sample](http://www.nhpcw.com/upload/%255D_100215061308.jpg)
 
 - Enjoy your war3 chatting on windows.

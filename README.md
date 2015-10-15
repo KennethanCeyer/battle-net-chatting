@@ -38,6 +38,12 @@
 
 ### Release Notes.
 
+#### Version 0.0.3
+
+- Support colours for user id.
+- Display current belong channel.
+- Check again if occurred connection error.
+
 #### Version 0.0.2
 
 - It support minimize toolbar option.

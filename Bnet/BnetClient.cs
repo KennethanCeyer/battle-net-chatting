@@ -324,17 +324,17 @@ namespace Bnet
                                 {
                                     case BnetPacketEvent.EID_CHANNEL:
                                         String channel = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
-                                        this.getHandleMsg("유저 확인:" + user.name);
+                                        this.getHandleMsg("채널 유저 확인:" + user.name);
                                         bnetCurrentChannel = channel;
                                         OnChatInfo(this.bnetUserUid, "님이 " + channel + " 채널에 입장.");
                                         OnChatUserChannelMove(this.bnetUserUid, channel);
                                         break;
                                     case BnetPacketEvent.EID_USERFLAGS:
-                                        this.getHandleMsg("유저 확인:" + user.name);
-                                        bnetPacketStream.getUserFlags(bnetPackSt);
+                                        this.getHandleMsg("플래그 유저 확인:" + user.name);
+                                        bnetPacketStream.getUserFlags(bnetPackSt, receiveBuffer);
                                         break;
                                     case BnetPacketEvent.EID_SHOWUSER:
-                                        this.getHandleMsg("유저 확인:" + user.name);
+                                        this.getHandleMsg("SHOW 유저 확인:" + user.name);
                                         break;
                                     case BnetPacketEvent.EID_ERROR:
                                         message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());

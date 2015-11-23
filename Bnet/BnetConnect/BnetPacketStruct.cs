@@ -11,6 +11,7 @@ namespace Bnet.BnetConnect
         public BnetPacketModel packet_id;
         public uint packet_len;
         public List<byte> pack_data = new List<byte>();
+
         public String getData(byte[] data, uint pos = 0)
         {
             if(pos == 0)

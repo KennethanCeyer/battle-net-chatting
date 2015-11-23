@@ -21,4 +21,10 @@ namespace Bnet.BnetConnect
         public String name;
         public String color;
     }
+
+    public struct BnetDataPack
+    {
+        public byte[] data;
+        public uint len;
+    }
 }

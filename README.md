@@ -11,7 +11,7 @@
 
 ### M16 Chatting For Windows is
 
-- Licenced MIT
+- Licenced under MIT
 - Developed by `PIGNOSE`
 - Optimized on `M16 Server`
 - It has followed of [Bnet docs](https://bnetdocs.org/?op=doc&did=16)

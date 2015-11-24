@@ -34,6 +34,7 @@ namespace Bnet
         public delegate void OnChatLeaveDelegate(BnetUsername user);
         public delegate void OnChatWhisperDelegate(BnetUsername user, String message);
         public delegate void OnChatSockErrorDelegate();
+        public delegate void OnChatUserUpdateDelegate(BnetUsername[] bnetUsers);
         public delegate void OnChatFriendsUpdateDelegate(BnetFriends[] bnetFriends);
         public delegate void OnChatUserChannelMoveDelegate(BnetUsername user, String channel);
         public delegate void OnChatUserLoginFaildDelegate(BnetCode bnetCode);
@@ -46,6 +47,7 @@ namespace Bnet
         public static event OnChatLeaveDelegate OnChatLeave;
         public static event OnChatWhisperDelegate OnChatWhisper;
         public static event OnChatSockErrorDelegate OnChatSockError;
+        public static event OnChatUserUpdateDelegate OnChatUserUpdate;
         public static event OnChatFriendsUpdateDelegate OnChatFriendsUpdate;
         public static event OnChatUserChannelMoveDelegate OnChatUserChannelMove;
         public static event OnChatUserLoginFaildDelegate OnChatUserLoginFaild;
@@ -57,6 +59,7 @@ namespace Bnet
         private BnetProtocol bnetProtocol = new BnetProtocol();
         private byte[] sockBuffer;
         private String bnetUsrId, bnetUserPw;
+        public List<BnetUsername> bnetUserList = new List<BnetUsername>();
         public BnetUsername bnetUserUid;
         public BnetHelper bnetHelper = BnetHelper.getInstance();
         public BnetPacketStream bnetPacketStream = new BnetPacketStream();
@@ -328,10 +331,14 @@ namespace Bnet
                                         bnetCurrentChannel = channel;
                                         OnChatInfo(this.bnetUserUid, "님이 " + channel + " 채널에 입장.");
                                         OnChatUserChannelMove(this.bnetUserUid, channel);
+                                        bnetUserList = new List<BnetUsername>();
+                                        OnChatUserUpdate(bnetUserList.ToArray());
                                         break;
                                     case BnetPacketEvent.EID_USERFLAGS:
                                         this.getHandleMsg("플래그 유저 확인:" + user.name);
-                                        bnetPacketStream.getUserFlags(bnetPackSt, receiveBuffer);
+                                        bnetUserList.AddRange(bnetPacketStream.getUserFlags(bnetPackSt, receiveBuffer));
+                                        bnetUserList = bnetUserList.Distinct().ToList();
+                                        OnChatUserUpdate(bnetUserList.ToArray());
                                         break;
                                     case BnetPacketEvent.EID_SHOWUSER:
                                         this.getHandleMsg("SHOW 유저 확인:" + user.name);

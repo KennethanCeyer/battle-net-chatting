@@ -40,9 +40,10 @@
 
 #### Version 0.0.3
 
-- Support colours for user id.
-- Display current belong channel.
-- Check again if occurred connection error.
+- It support the colours for the user id.
+- It can display the current belong channel of you.
+- This will be check again if that occurred connection error.
+- It support to show the user list who belong your current channel.
 
 #### Version 0.0.2
 

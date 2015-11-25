@@ -330,15 +330,21 @@ namespace Bnet
                                         this.getHandleMsg("채널 유저 확인:" + user.name);
                                         bnetCurrentChannel = channel;
                                         OnChatInfo(this.bnetUserUid, "님이 " + channel + " 채널에 입장.");
-                                        OnChatUserChannelMove(this.bnetUserUid, channel);
                                         bnetUserList = new List<BnetUsername>();
+                                        bnetUserList.Add(this.bnetUserUid);
                                         OnChatUserUpdate(bnetUserList.ToArray());
+                                        OnChatUserChannelMove(this.bnetUserUid, channel);
                                         break;
                                     case BnetPacketEvent.EID_USERFLAGS:
                                         this.getHandleMsg("플래그 유저 확인:" + user.name);
-                                        bnetUserList.AddRange(bnetPacketStream.getUserFlags(bnetPackSt, receiveBuffer));
+                                        bnetUserList = bnetPacketStream.getUserFlags(bnetPackSt, receiveBuffer);
                                         bnetUserList = bnetUserList.Distinct().ToList();
                                         OnChatUserUpdate(bnetUserList.ToArray());
+
+                                        foreach(var data in bnetUserList)
+                                        {
+                                            this.getHandleMsg("플래그 서브 유저:" + data.name);
+                                        }
                                         break;
                                     case BnetPacketEvent.EID_SHOWUSER:
                                         this.getHandleMsg("SHOW 유저 확인:" + user.name);
@@ -369,11 +375,16 @@ namespace Bnet
                                         message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                         this.getHandleMsg("Join: " + user + " : " + message);
                                         OnChatJoin(user);
+                                        bnetUserList.Add(user);
+                                        bnetUserList = bnetUserList.Distinct().ToList();
+                                        OnChatUserUpdate(bnetUserList.ToArray());
                                         break;
                                     case BnetPacketEvent.EID_LEAVE:
                                         message = bnetPackSt.getData(bnetPackSt.pack_data.ToArray());
                                         this.getHandleMsg("Leave: " + user + " : " + message);
                                         OnChatLeave(user);
+                                        bnetUserList.RemoveAll(x => x.name == user.name);
+                                        OnChatUserUpdate(bnetUserList.ToArray());
                                         break;
                                     default:
                                         this.getHandleMsg("별도 타입 패킷 [EID]: " + bnetPacketEvent.ToString("X"));

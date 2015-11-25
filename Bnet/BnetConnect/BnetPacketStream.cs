@@ -61,11 +61,10 @@ namespace Bnet.BnetConnect
             byte[] lHead = lData.Take(4).ToArray();
             byte[] rHead = lData.Skip(4).Take(4).ToArray();
 
-            if(lHead[0] == 0xFF && lHead[1] == (uint)BnetPacketModel.SID_CHATEVENT)
+            if(lHead[0] == 0xFF && lHead[1] == (uint)BnetPacketModel.SID_CHATEVENT && rHead[0] == 0x01)
             {
-                byte[] iHead = lData.Skip(12).Take(4).ToArray();
-                uint end = getIndexFromBytes(lData.Skip((int)userFlagSeek + 1).ToArray());
                 uint len = lHead[2];
+                uint end = getIndexFromBytes(lData.Skip((int)userFlagSeek + 1).ToArray());
                 bnetDataPack.data = lData.Skip((int) userFlagSeek).Take((int) (end + 1)).ToArray();
                 bnetDataPack.len = len;
             }

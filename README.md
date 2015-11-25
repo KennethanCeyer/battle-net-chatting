@@ -1,21 +1,21 @@
 # M16-Chatting-For-Windows
 
-> Warcraft III Battlenet chatting for windows!
+> The Warcraft III Battlenet chatting for Windows!
 
  [![Join the chat at https://gitter.im/KennethanCeyer/PIGNOSE](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/KennethanCeyer/PIGNOSE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ![Sample](http://www.nhpcw.com/upload/%255D_100215061308.jpg)
 
-- Enjoy your war3 chatting on windows.
-- It's so quick and fast!.
+- Enjoy your war3 chatting on Windows.
+- It is so quick and fast!.
 
 ### M16 Chatting For Windows is
 
-- Licenced MIT
+- Licenced under MIT
 - Developed by `PIGNOSE`
 - Optimized on `M16 Server`
-- It has followed of [Bnet docs](https://bnetdocs.org/?op=doc&did=16)
-- It works only Windows Platform.
+- It is following of [Bnet docs](https://bnetdocs.org/?op=doc&did=16)
+- It works only the Windows platform.
 
 ### Contribution
 
@@ -25,7 +25,7 @@
 
 ### Related
 
-- This is for Windows.
+- This is for the Windows.
 - You can use for android app, If you use that one.
 - [Github M16-Chat-For-Android](https://github.com/KennethanCeyer/m16chat-android)
 
@@ -40,9 +40,10 @@
 
 #### Version 0.0.3
 
-- Support colours for user id.
-- Display current belong channel.
-- Check again if occurred connection error.
+- It support the colours for the user id.
+- It can display the current belong channel of you.
+- This will be check again if that occurred connection error.
+- It support to show the user list who belong your current channel.
 
 #### Version 0.0.2
 

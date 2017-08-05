@@ -6,7 +6,7 @@
  
  ``` This project work in progress ```
 
-![Sample](http://www.nhpcw.com/upload/%25EC%25A0%259C%25EB%25AA%25A9-%25EC%2597%2586%25EC%259D%258C-1_032416024649.png)
+![Sample](http://www.pigno.se/static/assets/images/m16talk.png)
 
 - Enjoy your war3 chatting on Windows.
 - It is so quick and fast!.
